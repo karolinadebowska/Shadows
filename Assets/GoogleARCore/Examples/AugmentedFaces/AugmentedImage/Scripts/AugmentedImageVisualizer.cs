@@ -89,12 +89,12 @@ namespace GoogleARCore.Examples.AugmentedImage
             {
                 Models[2].SetActive(false);
                 Models[3].SetActive(false);
-                float halfWidth = Image.ExtentX/2;
+                float halfWidth = Image.ExtentX/4;
                 float halfHeight = Image.ExtentZ/2;
                 Models[0].transform.localPosition =
-                    (halfWidth * Vector3.left) + (halfHeight * Vector3.back);
+                    (halfWidth * Vector3.left) + (halfHeight * Vector3.forward);
                 Models[1].transform.localPosition =
-                   (halfWidth * Vector3.right) + (halfHeight * Vector3.back);
+                   (halfWidth * Vector3.right) + (halfHeight * Vector3.forward);
                 Models[0].SetActive(true);
                 Models[1].SetActive(true); 
             }
