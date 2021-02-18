@@ -95,27 +95,8 @@ namespace GoogleARCore.Examples.AugmentedImage
                     (halfWidth * Vector3.left) + (halfHeight * Vector3.back);
                 Models[1].transform.localPosition =
                    (halfWidth * Vector3.right) + (halfHeight * Vector3.back);
-
                 Models[0].SetActive(true);
-                Models[1].SetActive(true);
-                /*
-                FrameLowerLeft.transform.localPosition =
-                    (halfWidth * Vector3.left) + (halfHeight * Vector3.back);
-                FrameLowerRight.transform.localPosition =
-                    (halfWidth * Vector3.right) + (halfHeight * Vector3.back);
-                FrameUpperLeft.transform.localPosition =
-                    (halfWidth * Vector3.left) + (halfHeight * Vector3.forward);
-                FrameUpperRight.transform.localPosition =
-                   (halfWidth * Vector3.right) + (halfHeight * Vector3.forward);
-                */
-
-
-                /*
-                FrameLowerLeft.SetActive(true);
-                FrameLowerRight.SetActive(true);
-                FrameUpperLeft.SetActive(false);
-                FrameUpperRight.SetActive(false);
-                */
+                Models[1].SetActive(true); 
             }
             else {
                 return;

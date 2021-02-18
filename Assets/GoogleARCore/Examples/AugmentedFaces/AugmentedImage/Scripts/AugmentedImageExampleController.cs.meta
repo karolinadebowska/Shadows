@@ -3,7 +3,10 @@ guid: 31ecb5925e1934948ae9282e70de6f08
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - AugmentedImageVisualizerPrefab: {instanceID: 0}
+  - FitToScanOverlay: {fileID: 3477849910639146636, guid: 51bfa89ef9bc88047afafd58c2ddbf2b,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
