@@ -28,7 +28,7 @@ namespace GoogleARCore.Examples.AugmentedImage
     using UnityEngine;
 
     /// <summary>
-    /// Uses 4 frame corner objects to visualize an AugmentedImage.
+    /// Uses objects to visualize an AugmentedImage
     /// </summary>
     public class AugmentedImageVisualizer : MonoBehaviour
     {
@@ -37,30 +37,34 @@ namespace GoogleARCore.Examples.AugmentedImage
         /// </summary>
         public AugmentedImage Image;
 
+        /// <summary>
+        /// Array of models to place when an image is detected.
+        /// </summary>
         public GameObject[] Models;
 
         /// <summary>
-        /// A model for the lower left corner of the frame to place when an image is detected.
+        /// The Start method which prevents all objects from rendering at once
         /// </summary>
-        //public GameObject FrameLowerLeft;
+        public void Start()
+        {
+            Models[0].SetActive(false);
+            Models[1].SetActive(false);
+            Models[2].SetActive(false);
+            Models[3].SetActive(false);
+            float halfWidth = Image.ExtentX / 4;
+            float halfHeight = Image.ExtentZ / 2;
+            Models[0].transform.localPosition =
+                (halfWidth * Vector3.left) + (halfHeight * Vector3.forward);
+            Models[1].transform.localPosition =
+               (halfWidth * Vector3.right) + (halfHeight * Vector3.forward);
+            Models[2].transform.localPosition =
+                (halfWidth * Vector3.left) + (halfHeight * Vector3.back);
+            Models[3].transform.localPosition =
+               (halfWidth * Vector3.right) + (halfHeight * Vector3.back);
+        }
 
         /// <summary>
-        /// A model for the lower right corner of the frame to place when an image is detected.
-        /// </summary>
-       // public GameObject FrameLowerRight;
-
-        /// <summary>
-        /// A model for the lower left corner of the frame to place when an image is detected.
-        /// </summary>
-       // public GameObject FrameUpperLeft;
-
-        /// <summary>
-        /// A model for the lower right corner of the frame to place when an image is detected.
-        /// </summary>
-        //public GameObject FrameUpperRight;
-
-        /// <summary>
-        /// The Unity Update method.
+        /// The Update method which render correct models for a demo
         /// </summary>
         public void Update()
         {
@@ -74,27 +78,11 @@ namespace GoogleARCore.Examples.AugmentedImage
             }
             if (Image.Name == "demo2" && Image.TrackingState == TrackingState.Tracking)
             {
-                Models[0].SetActive(false);
-                Models[1].SetActive(false);
-                float halfWidth = Image.ExtentX/2;
-                float halfHeight = Image.ExtentZ/2;
-                Models[2].transform.localPosition =
-                    (halfWidth * Vector3.left) + (halfHeight * Vector3.back);
-                Models[3].transform.localPosition =
-                   (halfWidth * Vector3.right) + (halfHeight * Vector3.back);
                 Models[2].SetActive(true);
                 Models[3].SetActive(true);
             }
             else if (Image.Name == "demo1" && Image.TrackingState == TrackingState.Tracking)
             {
-                Models[2].SetActive(false);
-                Models[3].SetActive(false);
-                float halfWidth = Image.ExtentX/4;
-                float halfHeight = Image.ExtentZ/2;
-                Models[0].transform.localPosition =
-                    (halfWidth * Vector3.left) + (halfHeight * Vector3.forward);
-                Models[1].transform.localPosition =
-                   (halfWidth * Vector3.right) + (halfHeight * Vector3.forward);
                 Models[0].SetActive(true);
                 Models[1].SetActive(true); 
             }
