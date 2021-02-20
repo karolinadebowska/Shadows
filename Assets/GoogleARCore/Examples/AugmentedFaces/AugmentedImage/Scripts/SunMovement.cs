@@ -22,6 +22,7 @@ public class SunMovement : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("start");
         sun = gameObject;
         sunLight = gameObject.GetComponent<Light>();
         secondsPerHour = secondsPerMinute * 60;
@@ -31,18 +32,24 @@ public class SunMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("update");
         SunUpdate();
         timeOfDay += (Time.deltaTime / secondsPerDay) * timeMultiplier;
 
-        if (timeOfDay >= 15)
+        if (timeOfDay > 15)
         {
             timeOfDay = 0;
         }
+    }
+    public void setTime(float x) {
+        timeOfDay = x;
+        Debug.Log("i'm here "+x);
+       // SunUpdate(timeOf);
     }
 
     public void SunUpdate()
     {
         sun.transform.localRotation = Quaternion.Euler(((timeOfDay / 15) * 180f) - 90, 90, 0);
-        sun.transform.localPosition = new Vector3((timeOfDay / 15 * 30f) + 10, 0.1f * (float)Math.Sin((float)((timeOfDay / 15) * 180f * degToRadConv)), 0);
+        sun.transform.localPosition = new Vector3((timeOfDay / 15 * 0.3f), 0.05f * (float)Math.Sin((float)((timeOfDay / 15) * 180f * degToRadConv)), 0);
     }
 }
