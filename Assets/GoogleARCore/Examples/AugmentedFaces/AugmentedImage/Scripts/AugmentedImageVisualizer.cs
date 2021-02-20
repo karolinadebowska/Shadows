@@ -84,7 +84,7 @@ namespace GoogleARCore.Examples.AugmentedImage
             else if (Image.Name == "demo1" && Image.TrackingState == TrackingState.Tracking)
             {
                 Models[0].SetActive(true);
-                Models[1].SetActive(true); 
+                Models[1].SetActive(true);
             }
             else {
                 return;

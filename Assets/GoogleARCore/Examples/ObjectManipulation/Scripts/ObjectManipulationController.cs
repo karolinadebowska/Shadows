@@ -41,22 +41,6 @@ namespace GoogleARCore.Examples.ObjectManipulation
         /// </summary>
         private bool _isQuitting = false;
 
-        //from here
-        /// <summary>
-        /// A prefab for visualizing an AugmentedImage.
-        /// </summary>
-        public AugmentedImageVisualizer AugmentedImageVisualizerPrefab;
-
-        /// <summary>
-        /// The overlay containing the fit to scan user guide.
-        /// </summary>
-        public GameObject FitToScanOverlay;
-
-        private Dictionary<int, AugmentedImageVisualizer> _visualizers
-            = new Dictionary<int, AugmentedImageVisualizer>();
-        private string currentImage;
-        private List<AugmentedImage> _tempAugmentedImages = new List<AugmentedImage>();
-        //to here
 
         /// <summary>
         /// The Unity Update() method.
@@ -64,53 +48,6 @@ namespace GoogleARCore.Examples.ObjectManipulation
         public void Update()
         {
             UpdateApplicationLifecycle();
-            // Exit the app when the 'back' button is pressed.
-
-            // Get updated augmented images for this frame.
-            Session.GetTrackables<AugmentedImage>(
-                _tempAugmentedImages, TrackableQueryFilter.Updated);
-
-            // Create visualizers and anchors for updated augmented images that are tracking and do
-            // not previously have a visualizer. Remove visualizers for stopped images.
-            foreach (var image in _tempAugmentedImages)
-            {
-                AugmentedImageVisualizer visualizer = null;
-                _visualizers.TryGetValue(image.DatabaseIndex, out visualizer);
-                if ((image.TrackingMethod == AugmentedImageTrackingMethod.FullTracking || image.TrackingMethod == AugmentedImageTrackingMethod.LastKnownPose) && visualizer == null)
-                {
-                    // Create an anchor to ensure that ARCore keeps tracking this augmented image.
-                    Anchor anchor = image.CreateAnchor(image.CenterPose);
-                    visualizer = (AugmentedImageVisualizer)Instantiate(
-                        AugmentedImageVisualizerPrefab, anchor.transform);
-                    visualizer.Image = image;
-                    _visualizers.Add(image.DatabaseIndex, visualizer);
-                    Debug.Log(_visualizers);
-                }
-                //to do: compare with previous image; if image has changed, remove visualizer 
-                /*
-                else if (image.TrackingMethod == AugmentedImageTrackingMethod.LastKnownPose && visualizer != null) 
-                {
-                    _visualizers.Remove(image.DatabaseIndex);
-                    GameObject.Destroy(visualizer.gameObject);
-                }*/
-                else if (image.TrackingMethod == AugmentedImageTrackingMethod.NotTracking && visualizer != null)
-                {
-                    _visualizers.Remove(image.DatabaseIndex);
-                    GameObject.Destroy(visualizer.gameObject);
-                }
-            }
-
-            // Show the fit-to-scan overlay if there are no images that are Tracking.
-            foreach (var visualizer in _visualizers.Values)
-            {
-                if (visualizer.Image.TrackingState == TrackingState.Tracking)
-                {
-                    FitToScanOverlay.SetActive(false);
-                    return;
-                }
-            }
-
-            FitToScanOverlay.SetActive(true);
         }
 
         /// <summary>

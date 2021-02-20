@@ -52,6 +52,8 @@ MonoBehaviour:
   - {fileID: 7430584499836846894}
   - {fileID: 8389740104130611386}
   - {fileID: 1008326352879902202}
+  dayLength: 20
+  rotationSpeed: 0
 --- !u!1001 &2093878105959615680
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -235,6 +237,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sun
       objectReference: {fileID: 0}
+    - target: {fileID: 317780726488733781, guid: 8a2a9efa616601f41823dfba041b2a35,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 317780726488733783, guid: 8a2a9efa616601f41823dfba041b2a35,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 317780728012034864, guid: 8a2a9efa616601f41823dfba041b2a35,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -287,8 +299,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 317780728012034867, guid: 8a2a9efa616601f41823dfba041b2a35,
         type: 3}
+      propertyPath: m_Shadows.m_Bias
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 317780728012034867, guid: 8a2a9efa616601f41823dfba041b2a35,
+        type: 3}
       propertyPath: m_Shadows.m_Type
-      value: 1
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 317780728012034867, guid: 8a2a9efa616601f41823dfba041b2a35,
+        type: 3}
+      propertyPath: m_Shadows.m_NearPlane
+      value: 0.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a2a9efa616601f41823dfba041b2a35, type: 3}
