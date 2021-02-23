@@ -42,21 +42,38 @@ namespace GoogleARCore.Examples.AugmentedImage
         /// </summary>
         public GameObject[] Models;
 
+        private int counter = 0;
+        public void Awake()
+        {
+            //this makes sure that position will be set only once
+            if (counter == 0)
+            {
+                Debug.Log("awake");
+                Models[1].transform.localPosition = new Vector3(-0.1f, 0.0f, 0.1f);
+            }
+            counter = counter + 1;
+        }
         /// <summary>
         /// The Start method which prevents all objects from rendering at once
         /// </summary>
         public void Start()
         {
+            //SunMovement.setPosition();
             Models[0].SetActive(false);
             Models[1].SetActive(false);
             Models[2].SetActive(false);
             Models[3].SetActive(false);
-            float halfWidth = Image.ExtentX / 4;
+            float halfWidth = Image.ExtentX / 2;
+            Debug.Log("halfWidth " + halfWidth);
             float halfHeight = Image.ExtentZ / 2;
+            //cat
             Models[0].transform.localPosition =
-                (halfWidth * Vector3.left) + (halfHeight * Vector3.forward);
-            Models[1].transform.localPosition =
-               (halfWidth * Vector3.right) + (halfHeight * Vector3.forward);
+                (halfWidth * Vector3.right) + (halfHeight * Vector3.back);
+            Debug.Log("cat position: " + Models[0].transform.localPosition);
+            //sun
+            //  Models[1].transform.localPosition =
+            //   (halfWidth * Vector3.left) + (halfHeight * Vector3.forward);
+           
             Models[2].transform.localPosition =
                 (halfWidth * Vector3.left) + (halfHeight * Vector3.back);
             Models[3].transform.localPosition =
@@ -86,7 +103,8 @@ namespace GoogleARCore.Examples.AugmentedImage
                 Models[0].SetActive(true);
                 Models[1].SetActive(true);
             }
-            else {
+            else
+            {
                 return;
             }
         }
