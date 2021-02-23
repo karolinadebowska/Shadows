@@ -293,7 +293,7 @@ PrefabInstance:
     - target: {fileID: 317780728012034867, guid: 8a2a9efa616601f41823dfba041b2a35,
         type: 3}
       propertyPath: m_Intensity
-      value: 0.6
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 317780728012034867, guid: 8a2a9efa616601f41823dfba041b2a35,
         type: 3}
@@ -309,6 +309,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Shadows.m_NearPlane
       value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6391146424957699116, guid: 8a2a9efa616601f41823dfba041b2a35,
+        type: 3}
+      propertyPath: stopTime
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6391146424957699116, guid: 8a2a9efa616601f41823dfba041b2a35,
         type: 3}

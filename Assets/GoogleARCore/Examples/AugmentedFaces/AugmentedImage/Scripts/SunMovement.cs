@@ -10,8 +10,8 @@ public class SunMovement : MonoBehaviour
 
     [Range(0, 12)] //from 6am till 9pm
     public float timeOfDay = 0;
-    [Range(0, 12)] //from 6am till 9pm
-    public float stopTime = 6;
+    [HideInInspector]
+    public float stopTime = -1;
     public float secondsPerMinute = 60;
     [HideInInspector]
     public float secondsPerHour;
@@ -30,6 +30,11 @@ public class SunMovement : MonoBehaviour
     // converting value to radians 
     public static double radians = 15 * numHours * (Math.PI) / 180;
 
+    public void setStopTime(int x)
+    {
+        stopTime = x;
+        Debug.Log("setStopTime" + x);
+    }
     void Start()
     {
         sun = gameObject;
@@ -41,36 +46,39 @@ public class SunMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if ((int)timeOfDay == stopTime)
+        if (stopTime != -1)
         {
-            Debug.Log("if timeOfDay" + timeOfDay);
-            SunUpdate();
-            return;
-        }
-        else if ((int)timeOfDay > stopTime)
-        {
-            Debug.Log("else if timeOfDay" + timeOfDay);
-            return;
-        }
-        else
-        {
-            SunUpdate();
-            timeOfDay += (Time.deltaTime / secondsPerDay) * timeMultiplier;
-
-            if (timeOfDay >= 12)
+            Debug.Log("inside update, stopTime =" + stopTime);
+            if (Math.Floor((double)timeOfDay) == stopTime)
             {
-                timeOfDay = 0;
+                SunUpdate();
+                return;
+            }
+            else if ((int)timeOfDay > stopTime)
+            {
+                return;
+            }
+            else
+            {
+                SunUpdate();
+                timeOfDay += (Time.deltaTime / secondsPerDay) * timeMultiplier;
+
+                if (timeOfDay >= 12)
+                {
+                    timeOfDay = 0;
+                }
             }
         }
     }
     public void setTime(float x) {
-        timeOfDay = x;
-        Debug.Log("i'm here "+x);
+        int time = (int)Math.Floor(x);
+        timeOfDay = 0;
+        setStopTime(time-6);
+        Debug.Log("time set to " + time+" index: "+(time-6));
     }
     public void SunUpdate()
     {
         sun.transform.localRotation = Quaternion.Euler((((timeOfDay / numHours) * degr))/2 - 90, 90, 0);
-        Quaternion.Euler(((timeOfDay / 15) * 225f) - 90, 90, 0);
         sun.transform.localPosition = new Vector3((timeOfDay / numHours * 0.4f)-0.1f, 0.4f/2 * (float)Math.Sin((float)((timeOfDay / numHours) * radians)), 0.1f);
     }
 }
