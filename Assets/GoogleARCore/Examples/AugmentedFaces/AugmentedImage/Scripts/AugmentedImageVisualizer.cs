@@ -70,10 +70,6 @@ namespace GoogleARCore.Examples.AugmentedImage
             Models[0].transform.localPosition =
                 (halfWidth * Vector3.right) + (halfHeight * Vector3.back);
             Debug.Log("cat position: " + Models[0].transform.localPosition);
-            //sun
-            //  Models[1].transform.localPosition =
-            //   (halfWidth * Vector3.left) + (halfHeight * Vector3.forward);
-           
             Models[2].transform.localPosition =
                 (halfWidth * Vector3.left) + (halfHeight * Vector3.back);
             Models[3].transform.localPosition =

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using UnityEngine.UI;
 
 public class SunMovement : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class SunMovement : MonoBehaviour
     [Range(0, 12)] //from 6am till 9pm
     public float timeOfDay = 0;
     [HideInInspector]
-    public float stopTime = -1;
+    public float stopTime;
     public float secondsPerMinute = 60;
     [HideInInspector]
     public float secondsPerHour;
@@ -25,30 +26,41 @@ public class SunMovement : MonoBehaviour
     public float radius = 0.01f;
     [HideInInspector]
     public static float degr = 15 * numHours;
-    [HideInInspector]
-    //public static bool readyToRender = false;
     // converting value to radians 
     public static double radians = 15 * numHours * (Math.PI) / 180;
 
-    public void setStopTime(int x)
+    public static Slider mainSlider;
+    void Awake()
     {
-        stopTime = x;
-        Debug.Log("setStopTime" + x);
+        if (GameObject.FindGameObjectWithTag("mySlider"))
+        {
+            mainSlider = (Slider)FindObjectOfType(typeof(Slider));
+        }
+        stopTime = 0;
     }
+
     void Start()
     {
+        mainSlider.onValueChanged.AddListener(delegate { ValueChanged(); });
         sun = gameObject;
         sunLight = gameObject.GetComponent<Light>();
         secondsPerHour = secondsPerMinute * 60;
         secondsPerDay = secondsPerHour * 12;
     }
 
+    public void ValueChanged() {
+        Debug.Log("value from a slider:"+mainSlider.value);
+        stopTime = mainSlider.value - 6;
+        timeOfDay = 0;
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if (stopTime != -1)
-        {
-            Debug.Log("inside update, stopTime =" + stopTime);
+       // if (stopTime != 1)
+       // {
+            Debug.Log("stopTime in update: " + stopTime+" timeOfDay: "+timeOfDay+ " Math.Floor((double)timeOfDay): "+ Math.Floor((double)timeOfDay));
+           // Debug.Log("inside update, stopTime =" + stopTime);
             if (Math.Floor((double)timeOfDay) == stopTime)
             {
                 SunUpdate();
@@ -61,21 +73,16 @@ public class SunMovement : MonoBehaviour
             else
             {
                 SunUpdate();
-                timeOfDay += (Time.deltaTime / secondsPerDay) * timeMultiplier;
 
-                if (timeOfDay >= 12)
+                if (Math.Floor((double)timeOfDay) >= 12)
                 {
                     timeOfDay = 0;
                 }
+                timeOfDay += (Time.deltaTime / secondsPerDay) * timeMultiplier;
             }
-        }
+        //}
     }
-    public void setTime(float x) {
-        int time = (int)Math.Floor(x);
-        timeOfDay = 0;
-        setStopTime(time-6);
-        Debug.Log("time set to " + time+" index: "+(time-6));
-    }
+
     public void SunUpdate()
     {
         sun.transform.localRotation = Quaternion.Euler((((timeOfDay / numHours) * degr))/2 - 90, 90, 0);
