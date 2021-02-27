@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
-
+using System.Collections.Generic;
 public class SunMovement : MonoBehaviour
 {
     [HideInInspector]
@@ -35,8 +35,12 @@ public class SunMovement : MonoBehaviour
     public static GameObject cat;
     [HideInInspector]
     private float yValue, zValue, xValue;
+
+    List<int> storedTimeOfDays = new List<int>();
+
     void Awake()
     {
+        Debug.Log("AWAKE IN SUN");
         if (GameObject.FindGameObjectWithTag("mySlider"))
         {
             mainSlider = (Slider)FindObjectOfType(typeof(Slider));
@@ -57,11 +61,11 @@ public class SunMovement : MonoBehaviour
         lr.material = new Material(material);
         lr.startColor = Color.gray;
         lr.endColor = Color.gray;
-        lr.startWidth = 0.005f;
-        lr.endWidth = 0.005f;
+        lr.startWidth = 0.002f;
+        lr.endWidth = 0.002f;
         lr.SetPosition(0, start);
         lr.SetPosition(1, end);
-        GameObject.Destroy(myLine);
+        GameObject.Destroy(myLine, Time.deltaTime);
     }
     void Start()
     {
@@ -78,15 +82,16 @@ public class SunMovement : MonoBehaviour
     }
 
     public void ValueChanged() {
-        Debug.Log("value from a slider:"+mainSlider.value);
+        //Debug.Log("value from a slider:"+mainSlider.value);
         stopTime = mainSlider.value - 6;
-        timeOfDay = 0;
+        // storedTimeOfDays.Add((int)stopTime);
+        timeOfDay = stopTime;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("position: " + sun.transform.position);
+       // Debug.Log("position: " + sun.transform.position);
            // Debug.Log("stopTime in update: " + stopTime+" timeOfDay: "+timeOfDay+ " Math.Floor((double)timeOfDay): "+ Math.Floor((double)timeOfDay));
            // Debug.Log("inside update, stopTime =" + stopTime);
             if (Math.Floor((double)timeOfDay) == stopTime)
