@@ -84,7 +84,7 @@ public class SunMovement : MonoBehaviour
     public void ValueChanged() {
         //Debug.Log("value from a slider:"+mainSlider.value);
         stopTime = mainSlider.value - 6;
-        // storedTimeOfDays.Add((int)stopTime);
+        //storedTimeOfDays.Add((int)stopTime);
         timeOfDay = stopTime;
     }
 
