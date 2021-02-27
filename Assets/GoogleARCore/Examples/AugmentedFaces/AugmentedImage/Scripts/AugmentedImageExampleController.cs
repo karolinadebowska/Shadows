@@ -48,7 +48,9 @@ namespace GoogleARCore.Examples.AugmentedImage
         /// <summary>
         /// The overlay containing the fit to scan user guide.
         /// </summary>
-        public GameObject FitToScanOverlay;
+        public GameObject LoadingOverlay;
+
+        public static Slider mainSlider;
 
         private Dictionary<int, AugmentedImageVisualizer> _visualizers
             = new Dictionary<int, AugmentedImageVisualizer>();
@@ -63,7 +65,11 @@ namespace GoogleARCore.Examples.AugmentedImage
             // Enable ARCore to target 60fps camera capture frame rate on supported devices.
             // Note, Application.targetFrameRate is ignored when QualitySettings.vSyncCount != 0.
             Application.targetFrameRate = 60;
-            Debug.Log("Awake");
+            if (GameObject.FindGameObjectWithTag("mySlider"))
+            {
+                mainSlider = (Slider)FindObjectOfType(typeof(Slider));
+                mainSlider.gameObject.SetActive(false);
+            }
         }
 
         /// <summary>
@@ -126,12 +132,12 @@ namespace GoogleARCore.Examples.AugmentedImage
             {
                 if (visualizer.Image.TrackingState == TrackingState.Tracking)
                 {
-                    FitToScanOverlay.SetActive(false);
+                    LoadingOverlay.SetActive(false);
+                    mainSlider.gameObject.SetActive(true);
                     return;
                 }
+                LoadingOverlay.SetActive(true);
             }
-
-            FitToScanOverlay.SetActive(true);
         }
     }
 }

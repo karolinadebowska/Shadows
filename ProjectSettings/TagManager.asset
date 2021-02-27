@@ -6,6 +6,7 @@ TagManager:
   tags:
   - ManipulationSystem
   - mySlider
+  - cat
   layers:
   - Default
   - TransparentFX

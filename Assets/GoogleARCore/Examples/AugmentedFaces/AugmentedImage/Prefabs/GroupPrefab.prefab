@@ -69,6 +69,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cat animated
       objectReference: {fileID: 0}
+    - target: {fileID: 6703684187065624663, guid: 8ed82a5c3c464a2489521ff659cb3fac,
+        type: 3}
+      propertyPath: m_TagString
+      value: cat
+      objectReference: {fileID: 0}
     - target: {fileID: 6703684187065726007, guid: 8ed82a5c3c464a2489521ff659cb3fac,
         type: 3}
       propertyPath: m_RootOrder
@@ -310,6 +315,11 @@ PrefabInstance:
       propertyPath: m_Shadows.m_NearPlane
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 6391146424957699116, guid: 8a2a9efa616601f41823dfba041b2a35,
+        type: 3}
+      propertyPath: material
+      value: 
+      objectReference: {fileID: 2100000, guid: 71ea771be2757425aad4b6170b8dad4a, type: 2}
     - target: {fileID: 6391146424957699116, guid: 8a2a9efa616601f41823dfba041b2a35,
         type: 3}
       propertyPath: stopTime
