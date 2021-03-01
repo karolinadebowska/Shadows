@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 
 public class SliderValueToText : MonoBehaviour
 {
-    public Slider sliderUI;
+    public GameObject sliderUI;
     private Text textSliderValue;
 
     void Start()
@@ -12,14 +11,14 @@ public class SliderValueToText : MonoBehaviour
         textSliderValue = GetComponent<Text>();
     }
 
-    public void ShowSliderValue(float value)
+    public void ShowSliderValue(int value)
     {
-        Debug.Log("slider value: "+value);
+        Debug.Log("Value: " + value);
         string sliderMessage;
-        if (value <= 12)
-            sliderMessage = value + ":00 am";
+        if (value <= 180)
+            sliderMessage = "AM";
         else
-            sliderMessage = (value-12) + ":00 pm";
+            sliderMessage = "PM";
         textSliderValue.text = sliderMessage;
     }
 }

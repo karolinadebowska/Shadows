@@ -30,7 +30,7 @@ public class SunMovement : MonoBehaviour
     public static float degr = 15 * numHours;
     // converting value to radians 
     public static double radians = 15 * numHours * (Math.PI) / 180;
-
+    private int count = 0;
     public static Slider mainSlider;
     public static GameObject cat;
     [HideInInspector]
@@ -41,9 +41,9 @@ public class SunMovement : MonoBehaviour
     void Awake()
     {
         Debug.Log("AWAKE IN SUN");
-        if (GameObject.FindGameObjectWithTag("mySlider"))
+        if (GameObject.FindGameObjectWithTag("myRadialSlider"))
         {
-            mainSlider = (Slider)FindObjectOfType(typeof(Slider));
+            mainSlider = (Slider)GameObject.FindObjectOfType(typeof(Slider));
         }
         if (GameObject.FindGameObjectWithTag("cat"))
         {
@@ -67,24 +67,29 @@ public class SunMovement : MonoBehaviour
         lr.SetPosition(1, end);
         GameObject.Destroy(myLine, Time.deltaTime);
     }
+
     void Start()
     {
-        mainSlider.onValueChanged.AddListener(delegate { ValueChanged(); });
+        //mainSlider.onValueChanged.AddListener(delegate { ValueChanged(); });
         sun = gameObject;
         sunLight = gameObject.GetComponent<Light>();
         //get initial values; in AR there are different values each time 
-        xValue = sun.transform.position.x;
-        yValue = sun.transform.position.y;
-        zValue = sun.transform.position.z;
+        if (count == 0)
+        {
+            xValue = sun.transform.position.x;
+            yValue = sun.transform.position.y;
+            zValue = sun.transform.position.z;
+        }
         DrawLine(new Vector3(xValue, yValue, zValue), sun.transform.position);
         secondsPerHour = secondsPerMinute * 60;
         secondsPerDay = secondsPerHour * 12;
+        count = count + 1;
     }
 
-    public void ValueChanged() {
+    public void ValueChanged(int value) {
         //Debug.Log("value from a slider:"+mainSlider.value);
-        stopTime = mainSlider.value - 6;
-        //storedTimeOfDays.Add((int)stopTime);
+        stopTime = (int)Math.Floor((double) value) / 30;
+        Debug.Log("value here :"+ value);
         timeOfDay = stopTime;
     }
 
