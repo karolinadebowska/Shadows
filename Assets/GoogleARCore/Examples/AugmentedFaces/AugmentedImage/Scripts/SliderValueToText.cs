@@ -13,7 +13,6 @@ public class SliderValueToText : MonoBehaviour
 
     public void ShowSliderValue(int value)
     {
-        Debug.Log("Value: " + value);
         string sliderMessage;
         if (value <= 180)
             sliderMessage = "AM";

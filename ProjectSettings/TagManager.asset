@@ -8,6 +8,9 @@ TagManager:
   - mySlider
   - cat
   - myRadialSlider
+  - secondarySlider
+  - PanelSlider
+  - amPm
   layers:
   - Default
   - TransparentFX

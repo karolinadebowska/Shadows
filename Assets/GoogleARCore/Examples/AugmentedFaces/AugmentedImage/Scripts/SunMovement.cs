@@ -10,9 +10,26 @@ public class SunMovement : MonoBehaviour
     public Light sunLight;
 
     [Range(0, 12)] //from 6am till 9pm
-    public float timeOfDay = 0;
+    public float timeOfDay;
     [HideInInspector]
-    public float stopTime;
+
+    private static float _stopTime;
+    public static float StopTime
+    {
+        get
+        {
+            // Reads are usually simple
+            return _stopTime;
+        }
+        set
+        {
+            // You can add logic here for race conditions,
+            // or other measurements
+            _stopTime = value;
+        }
+    }
+
+
     public float secondsPerMinute = 60;
     [HideInInspector]
     public float secondsPerHour;
@@ -30,8 +47,8 @@ public class SunMovement : MonoBehaviour
     public static float degr = 15 * numHours;
     // converting value to radians 
     public static double radians = 15 * numHours * (Math.PI) / 180;
-    private int count = 0;
-    public static Slider mainSlider;
+    private int count, countStart = 0;
+    public static GameObject mainSlider;
     public static GameObject cat;
     [HideInInspector]
     private float yValue, zValue, xValue;
@@ -43,13 +60,18 @@ public class SunMovement : MonoBehaviour
         Debug.Log("AWAKE IN SUN");
         if (GameObject.FindGameObjectWithTag("myRadialSlider"))
         {
-            mainSlider = (Slider)GameObject.FindObjectOfType(typeof(Slider));
+            Debug.Log("Type of radial slider: " + GameObject.FindGameObjectWithTag("myRadialSlider").GetType().ToString());
+            mainSlider = (GameObject)GameObject.FindObjectOfType(typeof(GameObject));
         }
         if (GameObject.FindGameObjectWithTag("cat"))
         {
             cat = (GameObject)FindObjectOfType(typeof(GameObject));
         }
-        stopTime = 0;
+        if (count == 0)
+        {
+            StopTime = 0;
+        }
+        count = count + 1;
     }
     private void DrawLine(Vector3 start, Vector3 end)
     {
@@ -74,7 +96,7 @@ public class SunMovement : MonoBehaviour
         sun = gameObject;
         sunLight = gameObject.GetComponent<Light>();
         //get initial values; in AR there are different values each time 
-        if (count == 0)
+        if (countStart == 0)
         {
             xValue = sun.transform.position.x;
             yValue = sun.transform.position.y;
@@ -83,28 +105,29 @@ public class SunMovement : MonoBehaviour
         DrawLine(new Vector3(xValue, yValue, zValue), sun.transform.position);
         secondsPerHour = secondsPerMinute * 60;
         secondsPerDay = secondsPerHour * 12;
-        count = count + 1;
+        countStart = count + 1;
     }
 
     public void ValueChanged(int value) {
         //Debug.Log("value from a slider:"+mainSlider.value);
-        stopTime = (int)Math.Floor((double) value) / 30;
-        Debug.Log("value here :"+ value);
-        timeOfDay = stopTime;
+        StopTime = (int)Math.Floor((double)value) / 30;
+        Debug.Log("value here :" + (int)Math.Floor((double)value / 30));
+        timeOfDay = 0;
+        Update();
     }
 
     // Update is called once per frame
     void Update()
     {
        // Debug.Log("position: " + sun.transform.position);
-           // Debug.Log("stopTime in update: " + stopTime+" timeOfDay: "+timeOfDay+ " Math.Floor((double)timeOfDay): "+ Math.Floor((double)timeOfDay));
+            Debug.Log("stopTime in update: " + StopTime+" timeOfDay: "+timeOfDay+ " Math.Floor((double)timeOfDay): "+ Math.Floor((double)timeOfDay));
            // Debug.Log("inside update, stopTime =" + stopTime);
-            if (Math.Floor((double)timeOfDay) == stopTime)
+            if (Math.Floor((double)timeOfDay) == StopTime)
             {
                 SunUpdate();
                 return;
             }
-            else if ((int)timeOfDay > stopTime)
+            else if ((int)timeOfDay > StopTime)
             {
                 return;
             }
@@ -125,8 +148,8 @@ public class SunMovement : MonoBehaviour
     {
         sun.transform.localRotation = Quaternion.Euler((((timeOfDay / numHours) * degr))/2 - 90, 90, 0);
         sun.transform.localPosition = new Vector3((timeOfDay / numHours * 0.4f)-0.1f, 0.4f/2 * (float)Math.Sin((float)((timeOfDay / numHours) * radians)), 0.1f);
-        DrawLine(new Vector3(sun.transform.position.x, yValue, zValue), sun.transform.position);
-        DrawLine(cat.transform.position, sun.transform.position);
-        DrawLine(cat.transform.position, new Vector3(sun.transform.position.x, yValue, zValue));
+//        DrawLine(new Vector3(sun.transform.position.x, yValue, zValue), sun.transform.position);
+   //     DrawLine(cat.transform.position, sun.transform.position);
+     //   DrawLine(cat.transform.position, new Vector3(sun.transform.position.x, yValue, zValue));
     }
 }

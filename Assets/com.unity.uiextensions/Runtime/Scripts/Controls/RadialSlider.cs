@@ -113,7 +113,7 @@ namespace UnityEngine.UI.Extensions
                     m_image.type = Image.Type.Filled;
                     m_image.fillMethod = Image.FillMethod.Radial360;
                     m_image.fillOrigin = 0;
-                    m_image.fillAmount = 0;
+                    m_image.fillAmount = 0.04f;
                 }
                 return m_image;
             }
@@ -146,8 +146,8 @@ namespace UnityEngine.UI.Extensions
         {
             if (isPointerDown)
             {
-               // if (GetAngleFromMousePoint() <= 0.25f){
-                    m_targetAngle = GetAngleFromMousePoint();
+                // if (GetAngleFromMousePoint() <= 0.25f){
+                m_targetAngle = GetAngleFromMousePoint();
                 //}
                 //else
                    // m_targetAngle = Math.Min((float)(GetAngleFromMousePoint()),0.99f);
@@ -201,13 +201,12 @@ namespace UnityEngine.UI.Extensions
         private float GetAngleFromMousePoint()
         {
             RectTransformUtility.ScreenPointToLocalPointInRectangle(transform as RectTransform, Input.mousePosition, m_eventCamera, out m_localPos);
-            Debug.Log((Mathf.Atan2(-m_localPos.y, m_localPos.x) * 180f / Mathf.PI + 180f) / 360f + 0.25f);
             float value = (Mathf.Atan2(-m_localPos.y, m_localPos.x) * 180f / Mathf.PI + 180f) / 360f + 0.25f;
+            Debug.Log(value);
             // radial pos of the mouse position.
-            if (value > 1)
-                    return value - 1;
-            else
-                return value;
+            if (value >= 1)
+               value = value - 1;
+            return value;
         }
 
         private void UpdateRadialImage(float targetAngle)

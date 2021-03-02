@@ -45,17 +45,40 @@ namespace GoogleARCore.Examples.AugmentedImage
         /// </summary>
         public AugmentedImageVisualizer AugmentedImageVisualizerPrefab;
 
+        public Text amPm;
+
         /// <summary>
         /// The overlay containing the fit to scan user guide.
         /// </summary>
         public GameObject LoadingOverlay;
 
-        public static Slider mainSlider;
+        public GameObject mainSlider;
+        //public static GameObject radialSlider;
+        public static Slider secondarySlider;
+
+        public CanvasGroup canvasGroup;
 
         private Dictionary<int, AugmentedImageVisualizer> _visualizers
             = new Dictionary<int, AugmentedImageVisualizer>();
         private string currentImage;
         private List<AugmentedImage> _tempAugmentedImages = new List<AugmentedImage>();
+
+
+        void Hide()
+        {
+            canvasGroup.alpha = 0f; //this makes everything transparent
+            canvasGroup.blocksRaycasts = false; //this prevents the UI element to receive input events
+        }
+        void Show()
+        {
+            canvasGroup.alpha = 1f;
+            canvasGroup.blocksRaycasts = true;
+            if (GameObject.FindGameObjectWithTag("amPm"))
+            {
+                amPm = (Text)FindObjectOfType(typeof(Text));
+                amPm.gameObject.SetActive(true);
+            }
+        }
 
         /// <summary>
         /// The Unity Awake() method.
@@ -65,10 +88,11 @@ namespace GoogleARCore.Examples.AugmentedImage
             // Enable ARCore to target 60fps camera capture frame rate on supported devices.
             // Note, Application.targetFrameRate is ignored when QualitySettings.vSyncCount != 0.
             Application.targetFrameRate = 60;
-            if (GameObject.FindGameObjectWithTag("mySlider"))
+            Hide();
+            if (GameObject.FindGameObjectWithTag("secondarySlider"))
             {
-                mainSlider = (Slider)FindObjectOfType(typeof(Slider));
-                mainSlider.gameObject.SetActive(false);
+                secondarySlider = (Slider)FindObjectOfType(typeof(Slider));
+                secondarySlider.gameObject.SetActive(false);
             }
         }
 
@@ -133,7 +157,7 @@ namespace GoogleARCore.Examples.AugmentedImage
                 if (visualizer.Image.TrackingState == TrackingState.Tracking)
                 {
                     LoadingOverlay.SetActive(false);
-                    mainSlider.gameObject.SetActive(true);
+                    Show();
                     return;
                 }
                 LoadingOverlay.SetActive(true);

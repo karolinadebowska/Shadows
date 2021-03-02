@@ -58,14 +58,17 @@ namespace GoogleARCore.Examples.AugmentedImage
         /// </summary>
         public void Start()
         {
+            float halfWidth = 0;
+            float halfHeight = 0;
             //SunMovement.setPosition();
             Models[0].SetActive(false);
             Models[1].SetActive(false);
             Models[2].SetActive(false);
             Models[3].SetActive(false);
-            float halfWidth = Image.ExtentX / 2;
-            Debug.Log("halfWidth " + halfWidth);
-            float halfHeight = Image.ExtentZ / 2;
+            if (Image != null) {
+                halfWidth = Image.ExtentX / 2;
+                halfHeight = Image.ExtentZ / 2;
+            }
             //cat
             Models[0].transform.localPosition =
                 (halfWidth * Vector3.right) + (halfHeight * Vector3.back);

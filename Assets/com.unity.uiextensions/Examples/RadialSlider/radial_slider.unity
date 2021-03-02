@@ -1228,7 +1228,6 @@ GameObject:
   - component: {fileID: 1719804580}
   - component: {fileID: 1719804579}
   - component: {fileID: 1719804578}
-  - component: {fileID: 1719804581}
   m_Layer: 5
   m_Name: Slider
   m_TagString: Untagged
@@ -1303,12 +1302,12 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: ad716093ca8bdf84189f6a67bfb8e30e, type: 3}
   m_Type: 3
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 0
   m_FillClockwise: 1
-  m_FillOrigin: 3
+  m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
 --- !u!222 &1719804580
@@ -1319,19 +1318,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1719804576}
   m_CullTransparentMesh: 0
---- !u!114 &1719804581
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1719804576}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8bf41c09a28f4244890445382ebb6797, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OutputField: {fileID: 687929378}
 --- !u!1 &1735601250
 GameObject:
   m_ObjectHideFlags: 0
@@ -2191,7 +2177,6 @@ GameObject:
   - component: {fileID: 2138750734}
   - component: {fileID: 2138750733}
   - component: {fileID: 2138750735}
-  - component: {fileID: 2138750736}
   m_Layer: 5
   m_Name: RadialSliderImage
   m_TagString: Untagged
@@ -2312,16 +2297,3 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &2138750736
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2138750731}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8bf41c09a28f4244890445382ebb6797, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OutputField: {fileID: 2131232563}
