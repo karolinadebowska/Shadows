@@ -55,7 +55,7 @@ namespace GoogleARCore.Examples.AugmentedImage
         public GameObject mainSlider;
         //public static GameObject radialSlider;
         public static Slider secondarySlider;
-
+        
         public CanvasGroup canvasGroup;
 
         private Dictionary<int, AugmentedImageVisualizer> _visualizers
