@@ -36,7 +36,7 @@ namespace GoogleARCore.Examples.AugmentedImage
         /// The AugmentedImage to visualize.
         /// </summary>
         public AugmentedImage Image;
-
+        public AugmentedImageController controller;
         /// <summary>
         /// Array of models to place when an image is detected.
         /// </summary>
@@ -45,10 +45,11 @@ namespace GoogleARCore.Examples.AugmentedImage
         private int counter = 0;
         public void Awake()
         {
+            controller = GameObject.Find("Controller").GetComponent<AugmentedImageController>();
             //this makes sure that position will be set only once
             if (counter == 0)
             {
-                Debug.Log("awake");
+               // Debug.Log("awake");
                 Models[1].transform.localPosition = new Vector3(-0.1f, 0.0f, 0.1f);
             }
             counter = counter + 1;
@@ -58,6 +59,7 @@ namespace GoogleARCore.Examples.AugmentedImage
         /// </summary>
         public void Start()
         {
+           // Debug.Log("start in a visualizer");
             float halfWidth = 0;
             float halfHeight = 0;
             //SunMovement.setPosition();
@@ -72,7 +74,8 @@ namespace GoogleARCore.Examples.AugmentedImage
             //cat
             Models[0].transform.localPosition =
                 (halfWidth * Vector3.right) + (halfHeight * Vector3.back);
-            Debug.Log("cat position: " + Models[0].transform.localPosition);
+            //Debug.Log("cat position: " + Models[0].transform.localPosition);
+            Models[2].transform.localPosition =
             Models[2].transform.localPosition =
                 (halfWidth * Vector3.left) + (halfHeight * Vector3.back);
             Models[3].transform.localPosition =
@@ -94,13 +97,19 @@ namespace GoogleARCore.Examples.AugmentedImage
             }
             if (Image.Name == "demo2" && Image.TrackingState == TrackingState.Tracking)
             {
+                controller.Demo2 = true;
                 Models[2].SetActive(true);
                 Models[3].SetActive(true);
+                Models[0].transform.localScale = new Vector3(0, 0, 0);
+                Models[1].transform.localScale = new Vector3(0, 0, 0);
             }
             else if (Image.Name == "demo1" && Image.TrackingState == TrackingState.Tracking)
             {
+                controller.Demo2 = false;
                 Models[0].SetActive(true);
                 Models[1].SetActive(true);
+                Models[2].transform.localScale = new Vector3(0, 0, 0);
+                Models[3].transform.localScale = new Vector3(0, 0, 0);
             }
             else
             {

@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dedc78af6a4ba14c9a10621478e483f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controller: {fileID: 0}
   Models:
   - {fileID: 4613575301606401175}
   - {fileID: 7430584499836846894}
@@ -491,6 +492,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Object Puzzle
       objectReference: {fileID: 0}
+    - target: {fileID: 9033049845950032496, guid: 69524668f066c004ab6f872492ce382b,
+        type: 3}
+      propertyPath: m_TagString
+      value: puzzle
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 69524668f066c004ab6f872492ce382b, type: 3}
 --- !u!1 &1008326352879902202 stripped
@@ -551,6 +557,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Lamp
+      objectReference: {fileID: 0}
+    - target: {fileID: 616681409361676286, guid: 07c0ca571de61a846bf8a8645d736619,
+        type: 3}
+      propertyPath: m_TagString
+      value: lamp
       objectReference: {fileID: 0}
     - target: {fileID: 667463661533886732, guid: 07c0ca571de61a846bf8a8645d736619,
         type: 3}

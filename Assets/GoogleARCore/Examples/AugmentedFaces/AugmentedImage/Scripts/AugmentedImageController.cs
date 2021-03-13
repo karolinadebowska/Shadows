@@ -23,6 +23,7 @@ namespace GoogleARCore.Examples.AugmentedImage
     using System.Collections.Generic;
     using System.Runtime.InteropServices;
     using GoogleARCore;
+    using GoogleARCore.Examples.ObjectManipulation;
     using UnityEngine;
     using UnityEngine.UI;
 
@@ -38,15 +39,30 @@ namespace GoogleARCore.Examples.AugmentedImage
     /// See details in <a href="https://developers.google.com/ar/develop/c/augmented-images/">
     /// Recognize and Augment Images</a>
     /// </remarks>
-    public class AugmentedImageExampleController : MonoBehaviour
+    public class AugmentedImageController : MonoBehaviour
     {
         /// <summary>
         /// A prefab for visualizing an AugmentedImage.
         /// </summary>
         public AugmentedImageVisualizer AugmentedImageVisualizerPrefab;
-
+        //public ObjectManipulation.PawnManipulator pawnManipulator;
         public Text amPm;
 
+        public bool _demo2 = false;
+        public bool Demo2
+        {
+            get
+            {
+                // Reads are usually simple
+                return _demo2;
+            }
+            set
+            {
+                // You can add logic here for race conditions,
+                // or other measurements
+                _demo2 = value;
+            }
+        }
         /// <summary>
         /// The overlay containing the fit to scan user guide.
         /// </summary>
@@ -64,12 +80,12 @@ namespace GoogleARCore.Examples.AugmentedImage
         private List<AugmentedImage> _tempAugmentedImages = new List<AugmentedImage>();
 
 
-        void Hide()
+        void HideUI()
         {
             canvasGroup.alpha = 0f; //this makes everything transparent
             canvasGroup.blocksRaycasts = false; //this prevents the UI element to receive input events
         }
-        void Show()
+        void ShowUI()
         {
             canvasGroup.alpha = 1f;
             canvasGroup.blocksRaycasts = true;
@@ -88,14 +104,15 @@ namespace GoogleARCore.Examples.AugmentedImage
             // Enable ARCore to target 60fps camera capture frame rate on supported devices.
             // Note, Application.targetFrameRate is ignored when QualitySettings.vSyncCount != 0.
             Application.targetFrameRate = 60;
-            Hide();
+            HideUI();
             if (GameObject.FindGameObjectWithTag("secondarySlider"))
             {
                 secondarySlider = (Slider)FindObjectOfType(typeof(Slider));
                 secondarySlider.gameObject.SetActive(false);
             }
-        }
-
+    }
+        public string holdName;
+        public int counter = 0;
         /// <summary>
         /// The Unity Update method.
         /// </summary>
@@ -125,39 +142,56 @@ namespace GoogleARCore.Examples.AugmentedImage
             // not previously have a visualizer. Remove visualizers for stopped images.
             foreach (var image in _tempAugmentedImages)
             {
+               // Debug.Log("image : "+image.Name+" tracking method "+image.TrackingMethod);
                 AugmentedImageVisualizer visualizer = null;
                 _visualizers.TryGetValue(image.DatabaseIndex, out visualizer);
-                if ((image.TrackingMethod == AugmentedImageTrackingMethod.FullTracking || image.TrackingMethod == AugmentedImageTrackingMethod.LastKnownPose) && visualizer == null)
+                if (image.TrackingMethod == AugmentedImageTrackingMethod.FullTracking && visualizer == null)
                 {
                     // Create an anchor to ensure that ARCore keeps tracking this augmented image.
                     Anchor anchor = image.CreateAnchor(image.CenterPose);
-                    visualizer = (AugmentedImageVisualizer)Instantiate(
-                        AugmentedImageVisualizerPrefab, anchor.transform);
+                    visualizer = (AugmentedImageVisualizer)Instantiate(AugmentedImageVisualizerPrefab, anchor.transform);
                     visualizer.Image = image;
                     _visualizers.Add(image.DatabaseIndex, visualizer);
-                    Debug.Log(_visualizers);
                 }
                 //to do: compare with previous image; if image has changed, remove visualizer 
-                /*
-                else if (image.TrackingMethod == AugmentedImageTrackingMethod.LastKnownPose && visualizer != null) 
+
+                else if (image.TrackingMethod == AugmentedImageTrackingMethod.LastKnownPose && visualizer != null)
                 {
+                    if (image.Name.Equals("demo1"))
+                    {
+                        Demo2 = true;
+                    }
+                    else if (image.Name.Equals("demo2")) 
+                    {
+                        Demo2 = false;
+                    }
+                    //remove the object
                     _visualizers.Remove(image.DatabaseIndex);
-                    GameObject.Destroy(visualizer.gameObject);
-                }*/
+                     GameObject.Destroy(visualizer.gameObject);
+                }
                 else if (image.TrackingMethod == AugmentedImageTrackingMethod.NotTracking && visualizer != null)
                 {
                     _visualizers.Remove(image.DatabaseIndex);
                     GameObject.Destroy(visualizer.gameObject);
                 }
             }
-
             // Show the fit-to-scan overlay if there are no images that are Tracking.
             foreach (var visualizer in _visualizers.Values)
             {
                 if (visualizer.Image.TrackingState == TrackingState.Tracking)
                 {
-                    LoadingOverlay.SetActive(false);
-                    Show();
+                    if (visualizer.Image.Name.Equals("demo1"))
+                    {
+                        Demo2 = false;
+                        LoadingOverlay.SetActive(false);
+                        ShowUI();
+                    }
+                    else {
+                        Debug.Log("name in else "+visualizer.Image.Name);
+                        Demo2 = true;
+                        LoadingOverlay.SetActive(false);
+                        HideUI();
+                    }
                     return;
                 }
                 LoadingOverlay.SetActive(true);

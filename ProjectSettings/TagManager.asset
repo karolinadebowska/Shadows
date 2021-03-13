@@ -11,6 +11,8 @@ TagManager:
   - secondarySlider
   - PanelSlider
   - amPm
+  - lamp
+  - puzzle
   layers:
   - Default
   - TransparentFX
