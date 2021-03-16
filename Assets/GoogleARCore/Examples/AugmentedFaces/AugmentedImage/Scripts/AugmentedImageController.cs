@@ -48,7 +48,7 @@ namespace GoogleARCore.Examples.AugmentedImage
         //public ObjectManipulation.PawnManipulator pawnManipulator;
         public Text amPm;
 
-        public bool _demo2 = false;
+        public bool _demo2;
         public bool Demo2
         {
             get
@@ -77,8 +77,8 @@ namespace GoogleARCore.Examples.AugmentedImage
         private Dictionary<int, AugmentedImageVisualizer> _visualizers
             = new Dictionary<int, AugmentedImageVisualizer>();
         private string currentImage;
-        private List<AugmentedImage> _tempAugmentedImages = new List<AugmentedImage>();
-
+        public List<AugmentedImage> _tempAugmentedImages = new List<AugmentedImage>();
+        public int counter = 0;
 
         void HideUI()
         {
@@ -110,9 +110,8 @@ namespace GoogleARCore.Examples.AugmentedImage
                 secondarySlider = (Slider)FindObjectOfType(typeof(Slider));
                 secondarySlider.gameObject.SetActive(false);
             }
-    }
-        public string holdName;
-        public int counter = 0;
+        }
+
         /// <summary>
         /// The Unity Update method.
         /// </summary>
@@ -135,8 +134,7 @@ namespace GoogleARCore.Examples.AugmentedImage
             }
 
             // Get updated augmented images for this frame.
-            Session.GetTrackables<AugmentedImage>(
-                _tempAugmentedImages, TrackableQueryFilter.Updated);
+            Session.GetTrackables<AugmentedImage>(_tempAugmentedImages, TrackableQueryFilter.Updated);
 
             // Create visualizers and anchors for updated augmented images that are tracking and do
             // not previously have a visualizer. Remove visualizers for stopped images.
@@ -154,20 +152,21 @@ namespace GoogleARCore.Examples.AugmentedImage
                     _visualizers.Add(image.DatabaseIndex, visualizer);
                 }
                 //to do: compare with previous image; if image has changed, remove visualizer 
-
+                
                 else if (image.TrackingMethod == AugmentedImageTrackingMethod.LastKnownPose && visualizer != null)
                 {
-                    if (image.Name.Equals("demo1"))
+                    if (Demo2 && image.Name.Equals("demo1"))
                     {
-                        Demo2 = true;
+                        //remove the object
+                        _visualizers.Remove(image.DatabaseIndex);
+                        GameObject.Destroy(visualizer.gameObject);
                     }
-                    else if (image.Name.Equals("demo2")) 
+                    else if (!Demo2 && image.Name.Equals("demo2"))
                     {
-                        Demo2 = false;
+                        //remove the object
+                        _visualizers.Remove(image.DatabaseIndex);
+                        GameObject.Destroy(visualizer.gameObject);
                     }
-                    //remove the object
-                    _visualizers.Remove(image.DatabaseIndex);
-                     GameObject.Destroy(visualizer.gameObject);
                 }
                 else if (image.TrackingMethod == AugmentedImageTrackingMethod.NotTracking && visualizer != null)
                 {
@@ -178,7 +177,7 @@ namespace GoogleARCore.Examples.AugmentedImage
             // Show the fit-to-scan overlay if there are no images that are Tracking.
             foreach (var visualizer in _visualizers.Values)
             {
-                if (visualizer.Image.TrackingState == TrackingState.Tracking)
+                if (visualizer.Image.TrackingMethod == AugmentedImageTrackingMethod.FullTracking)
                 {
                     if (visualizer.Image.Name.Equals("demo1"))
                     {
@@ -187,7 +186,7 @@ namespace GoogleARCore.Examples.AugmentedImage
                         ShowUI();
                     }
                     else {
-                        Debug.Log("name in else "+visualizer.Image.Name);
+                        //Debug.Log("name in else "+visualizer.Image.Name);
                         Demo2 = true;
                         LoadingOverlay.SetActive(false);
                         HideUI();

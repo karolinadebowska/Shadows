@@ -97,19 +97,13 @@ namespace GoogleARCore.Examples.AugmentedImage
             }
             if (Image.Name == "demo2" && Image.TrackingState == TrackingState.Tracking)
             {
-                controller.Demo2 = true;
                 Models[2].SetActive(true);
                 Models[3].SetActive(true);
-                Models[0].transform.localScale = new Vector3(0, 0, 0);
-                Models[1].transform.localScale = new Vector3(0, 0, 0);
             }
             else if (Image.Name == "demo1" && Image.TrackingState == TrackingState.Tracking)
             {
-                controller.Demo2 = false;
                 Models[0].SetActive(true);
                 Models[1].SetActive(true);
-                Models[2].transform.localScale = new Vector3(0, 0, 0);
-                Models[3].transform.localScale = new Vector3(0, 0, 0);
             }
             else
             {

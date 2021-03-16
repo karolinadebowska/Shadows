@@ -32689,7 +32689,7 @@ GameObject:
   - component: {fileID: 6437078994653556522}
   m_Layer: 0
   m_Name: lamp
-  m_TagString: Untagged
+  m_TagString: lamp
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -32703,7 +32703,7 @@ Transform:
   m_GameObject: {fileID: 616681409361676286}
   m_LocalRotation: {x: -0.70710677, y: 0, z: 0, w: 0.70710677}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.7, y: 0.3, z: 1}
+  m_LocalScale: {x: 0.02975, y: 0.01275, z: 0.0425}
   m_Children:
   - {fileID: 3973752759902945495}
   - {fileID: 6824546282782994765}
@@ -48372,9 +48372,9 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 3
+  m_Intensity: 1
   m_Range: 30
-  m_SpotAngle: 121
+  m_SpotAngle: 51.9
   m_InnerSpotAngle: 1
   m_CookieSize: 10
   m_Shadows:
@@ -48417,7 +48417,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 3.599e-42, z: 0, w: -8.625}
+  m_BoundingSphereOverride: {x: 0, y: 2.3510647e-38, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -95404,7 +95404,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1769bf61b22037f419fed0f93cf800b5, type: 2}
+  - {fileID: 2100000, guid: d8ac57d88dd305d4091409360d7c2395, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

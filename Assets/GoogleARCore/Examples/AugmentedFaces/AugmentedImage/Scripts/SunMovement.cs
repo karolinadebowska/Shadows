@@ -1,5 +1,7 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.UI.Extensions;
+
 public class SunMovement : MonoBehaviour
 {
     [HideInInspector]
@@ -25,7 +27,7 @@ public class SunMovement : MonoBehaviour
     // converting value to radians 
     public static double radians = 15 * numHours * (Math.PI) / 180;
     private int count, countStart = 0;
-    public static GameObject mainSlider;
+    public static RadialSlider mainSlider;
     public static GameObject cat;
     [HideInInspector]
     private float yValue, zValue, xValue;
@@ -82,17 +84,20 @@ public class SunMovement : MonoBehaviour
         Debug.Log("AWAKE IN SUN");
         if (GameObject.FindGameObjectWithTag("myRadialSlider"))
         {
-            mainSlider = (GameObject)GameObject.FindObjectOfType(typeof(GameObject));
+            mainSlider = (RadialSlider)GameObject.FindObjectOfType(typeof(RadialSlider));
         }
         if (GameObject.FindGameObjectWithTag("cat"))
         {
             cat = (GameObject)FindObjectOfType(typeof(GameObject));
         }
-        //initialize the position
+        //initialize the position of the sun
         if (count == 0)
         {
             StopTime = 0;
         }
+        StopTime = mainSlider.Value * numHours;
+        TimeOfDay = mainSlider.Value * numHours;
+        Debug.Log("stop time is" + StopTime+" value from slider "+ mainSlider.Value * numHours);
         count = count + 1;
     }
     private void DrawLine(Vector3 start, Vector3 end)
@@ -134,10 +139,8 @@ public class SunMovement : MonoBehaviour
     public void ValueChanged(int value) {
         //start from the last position
         TimeOfDay = StopTime;
-        //Debug.Log("value from a slider:"+mainSlider.value);
         StopTime = value/ 30;
-        Debug.Log("value from a slider:" + value / 30);
-        //TimeOfDay = 0;
+        Debug.Log("value of a clock has been changed");
     }
 
     public void onClick() {
