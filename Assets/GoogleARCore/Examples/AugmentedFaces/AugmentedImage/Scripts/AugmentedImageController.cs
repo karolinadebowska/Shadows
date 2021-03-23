@@ -66,16 +66,17 @@ namespace GoogleARCore.Examples.AugmentedImage
         /// The overlay containing the fit to scan user guide.
         /// </summary>
         public GameObject LoadingOverlay;
+        public GameObject LoadingDemo1;
+        public GameObject LoadingDemo2;
 
         public GameObject mainSlider;
-        public static PawnManipulator pawn;
+        public PawnManipulator pawn;
         public static Slider secondarySlider;
         
         public CanvasGroup canvasGroup;
 
         private Dictionary<int, AugmentedImageVisualizer> _visualizers
             = new Dictionary<int, AugmentedImageVisualizer>();
-        private string currentImage;
         public List<AugmentedImage> _tempAugmentedImages = new List<AugmentedImage>();
         public int counter = 0;
 
@@ -100,6 +101,8 @@ namespace GoogleARCore.Examples.AugmentedImage
         /// </summary>
         public void Awake()
         {
+            LoadingDemo1.SetActive(false);
+            LoadingDemo2.SetActive(false);
             // Enable ARCore to target 60fps camera capture frame rate on supported devices.
             // Note, Application.targetFrameRate is ignored when QualitySettings.vSyncCount != 0.
             Application.targetFrameRate = 60;
@@ -156,13 +159,12 @@ namespace GoogleARCore.Examples.AugmentedImage
                     if (Demo2 && image.Name.Equals("demo1"))
                     {
                         //remove the object
-                        pawn.RemoveObjects();
+                        _visualizers.Remove(image.DatabaseIndex);
+                        GameObject.Destroy(visualizer.gameObject);
                     }
                     else if (!Demo2 && image.Name.Equals("demo2"))
                     {
-                        //remove the object
-                        _visualizers.Remove(image.DatabaseIndex);
-                        GameObject.Destroy(visualizer.gameObject);
+                        pawn.disableObjects();
                     }
                 }
                 else if (image.TrackingMethod == AugmentedImageTrackingMethod.NotTracking && visualizer != null)
@@ -179,25 +181,46 @@ namespace GoogleARCore.Examples.AugmentedImage
                     if (visualizer.Image.Name.Equals("demo1"))
                     {
                         Demo2 = false;
+                        LoadingOverlay.SetActive(false);
                         //disable landscape mode
                         Screen.autorotateToLandscapeRight = false;
                         Screen.autorotateToLandscapeLeft = false;
-                        LoadingOverlay.SetActive(false);
-                        ShowUI();
+                        if (!clicked1)
+                            LoadingDemo1.SetActive(true);
+                        else
+                            ShowUI();
                     }
-                    else {
-                        //Debug.Log("name in else "+visualizer.Image.Name);
+                    else if (visualizer.Image.Name.Equals("demo2"))
+                    {
+                        pawn.enableObjects();
                         Demo2 = true;
+                        HideUI();
+                        LoadingOverlay.SetActive(false);
+                        if (!clicked2)
+                            LoadingDemo2.SetActive(true);
+
                         //enable landscape mode
                         Screen.autorotateToLandscapeRight = true;
                         Screen.autorotateToLandscapeLeft = true;
-                        LoadingOverlay.SetActive(false);
-                        HideUI();
+
+
                     }
                     return;
                 }
-                LoadingOverlay.SetActive(true);
+               // LoadingOverlay.SetActive(true);
             }
+        }
+        private bool clicked1 = false;
+        private bool clicked2 = false;
+        public void onClick1() {
+            LoadingDemo1.SetActive(false);
+            clicked1 = true;
+            ShowUI();
+        }
+        public void onClick2()
+        {
+            LoadingDemo2.SetActive(false);
+            clicked2 = true;
         }
     }
 }

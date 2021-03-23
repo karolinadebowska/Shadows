@@ -24,7 +24,7 @@ Shader "ARCore/TransparentShadow"
     {
         Tags
         {
-            "RenderType"="Opaque"
+            "RenderType"="Transparent"
             "DisableBatching"="True"
         }
 

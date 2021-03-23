@@ -68,12 +68,13 @@ namespace GoogleARCore.Examples.ObjectManipulation
             }
             return false;
         }
+        /*
         public void RemoveObjects() {
             Debug.Log("remove objects");
             GameObject.Destroy(gameObject0);
             GameObject.Destroy(gameObject1);
             count = 0;
-        }
+        }*/
         /*
         public void Initialize()
         {
@@ -92,6 +93,23 @@ namespace GoogleARCore.Examples.ObjectManipulation
         public void Start()
         {
             controller = GameObject.Find("Controller").GetComponent<AugmentedImageController>();
+        }
+        public void disableObjects() {
+            Debug.Log("disableObject");
+            if (gameObject0 && gameObject1)
+            {
+                gameObject0.SetActive(false);
+                gameObject1.SetActive(false);
+            }
+        }
+        public void enableObjects()
+        {
+            Debug.Log("disableObject");
+            if (gameObject0 && gameObject1)
+            {
+                gameObject0.SetActive(true);
+                gameObject1.SetActive(true);
+            }
         }
 
         public Pose pose;
@@ -142,10 +160,10 @@ namespace GoogleARCore.Examples.ObjectManipulation
                     Debug.Log("rotation "+pose.rotation);
             gameObject0 = Instantiate(PawnPrefab[0], new Vector3(pose.position.x - 0.1f, pose.position.y, pose.position.z-0.05f), new Quaternion(-0.707f, 0f, 0f, 0.707f));
                     gameObject1 = Instantiate(PawnPrefab[1], new Vector3(pose.position.x + 0.1f, pose.position.y, pose.position.z - 0.05f), pose.rotation);
-                    //Debug.Log(hit.Pose.position + "= " + pose.position+"rotation :"+hit.Pose.rotation+" = "+pose.rotation);
-                           
-            // Instantiate manipulator.
-                    var manipulator0 =
+            //Debug.Log(hit.Pose.position + "= " + pose.position+"rotation :"+hit.Pose.rotation+" = "+pose.rotation);
+
+          // Instantiate manipulator.
+          var manipulator0 =
                        Instantiate(ManipulatorPrefab, new Vector3(pose.position.x - 0.1f, pose.position.y, pose.position.z - 0.05f), pose.rotation);
                     //var manipulator1 = Instantiate(ManipulatorPrefab, new Vector3(pose.position.x + 0.1f, pose.position.y, pose.position.z - 0.1f), pose.rotation);
                 var manipulator1 =
