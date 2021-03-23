@@ -45,7 +45,6 @@ namespace GoogleARCore.Examples.AugmentedImage
         /// A prefab for visualizing an AugmentedImage.
         /// </summary>
         public AugmentedImageVisualizer AugmentedImageVisualizerPrefab;
-        //public ObjectManipulation.PawnManipulator pawnManipulator;
         public Text amPm;
 
         public bool _demo2;
@@ -69,7 +68,7 @@ namespace GoogleARCore.Examples.AugmentedImage
         public GameObject LoadingOverlay;
 
         public GameObject mainSlider;
-        //public static GameObject radialSlider;
+        public static PawnManipulator pawn;
         public static Slider secondarySlider;
         
         public CanvasGroup canvasGroup;
@@ -109,7 +108,7 @@ namespace GoogleARCore.Examples.AugmentedImage
             {
                 secondarySlider = (Slider)FindObjectOfType(typeof(Slider));
                 secondarySlider.gameObject.SetActive(false);
-            }
+            }            
         }
 
         /// <summary>
@@ -151,15 +150,13 @@ namespace GoogleARCore.Examples.AugmentedImage
                     visualizer.Image = image;
                     _visualizers.Add(image.DatabaseIndex, visualizer);
                 }
-                //to do: compare with previous image; if image has changed, remove visualizer 
-                
+                //remove not current visualizer                
                 else if (image.TrackingMethod == AugmentedImageTrackingMethod.LastKnownPose && visualizer != null)
                 {
                     if (Demo2 && image.Name.Equals("demo1"))
                     {
                         //remove the object
-                        _visualizers.Remove(image.DatabaseIndex);
-                        GameObject.Destroy(visualizer.gameObject);
+                        pawn.RemoveObjects();
                     }
                     else if (!Demo2 && image.Name.Equals("demo2"))
                     {
@@ -182,12 +179,18 @@ namespace GoogleARCore.Examples.AugmentedImage
                     if (visualizer.Image.Name.Equals("demo1"))
                     {
                         Demo2 = false;
+                        //disable landscape mode
+                        Screen.autorotateToLandscapeRight = false;
+                        Screen.autorotateToLandscapeLeft = false;
                         LoadingOverlay.SetActive(false);
                         ShowUI();
                     }
                     else {
                         //Debug.Log("name in else "+visualizer.Image.Name);
                         Demo2 = true;
+                        //enable landscape mode
+                        Screen.autorotateToLandscapeRight = true;
+                        Screen.autorotateToLandscapeLeft = true;
                         LoadingOverlay.SetActive(false);
                         HideUI();
                     }

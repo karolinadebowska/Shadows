@@ -1,4 +1,4 @@
-//-----------------------------------------------------------------------
+﻿//-----------------------------------------------------------------------
 // <copyright file="TransparentShadow.shader" company="Google LLC">
 //
 // Copyright 2019 Google LLC
@@ -18,7 +18,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-Shader "ARCore/TransparentShadow"
+Shader "ARCore/TransparentShadowDirLight"
 {
     SubShader
     {
@@ -35,13 +35,13 @@ Shader "ARCore/TransparentShadow"
         Pass
         {
             Name "SHADOW_ONLY"
-            Tags { "LightMode" = "ForwardAdd" }
+            Tags { "LightMode" = "ForwardBase" }
 
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
             #pragma target 2.0
-            #pragma multi_compile_fwdadd_fullshadows
+            #pragma multi_compile_fwdbase
             #pragma multi_compile_fog
 
             #include "UnityCG.cginc"
@@ -78,7 +78,7 @@ Shader "ARCore/TransparentShadow"
                 }
 
                 const fixed3 _ShadowColor = fixed3(0, 0, 0);
-                const fixed _ShadowIntensity = 0.8;
+                const fixed _ShadowIntensity = 0.24;
                 const fixed _FadeRadius = 0;
                 fixed ratio = distance(i.uv, fixed2(0.5, 0.5)) * 2;
                 if (ratio >= 1.0)

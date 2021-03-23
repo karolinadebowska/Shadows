@@ -36,7 +36,6 @@ namespace GoogleARCore.Examples.AugmentedImage
         /// The AugmentedImage to visualize.
         /// </summary>
         public AugmentedImage Image;
-        public AugmentedImageController controller;
         /// <summary>
         /// Array of models to place when an image is detected.
         /// </summary>
@@ -45,7 +44,6 @@ namespace GoogleARCore.Examples.AugmentedImage
         private int counter = 0;
         public void Awake()
         {
-            controller = GameObject.Find("Controller").GetComponent<AugmentedImageController>();
             //this makes sure that position will be set only once
             if (counter == 0)
             {
@@ -65,8 +63,8 @@ namespace GoogleARCore.Examples.AugmentedImage
             //SunMovement.setPosition();
             Models[0].SetActive(false);
             Models[1].SetActive(false);
-            Models[2].SetActive(false);
-            Models[3].SetActive(false);
+            //Models[2].SetActive(false);
+            //Models[3].SetActive(false);
             if (Image != null) {
                 halfWidth = Image.ExtentX / 2;
                 halfHeight = Image.ExtentZ / 2;
@@ -75,11 +73,11 @@ namespace GoogleARCore.Examples.AugmentedImage
             Models[0].transform.localPosition =
                 (halfWidth * Vector3.right) + (halfHeight * Vector3.back);
             //Debug.Log("cat position: " + Models[0].transform.localPosition);
-            Models[2].transform.localPosition =
-            Models[2].transform.localPosition =
-                (halfWidth * Vector3.left) + (halfHeight * Vector3.back);
-            Models[3].transform.localPosition =
-               (halfWidth * Vector3.right) + (halfHeight * Vector3.back);
+            //Models[2].transform.localPosition =
+           // Models[2].transform.localPosition =
+            //    (halfWidth * Vector3.left) + (halfHeight * Vector3.back);
+           // Models[3].transform.localPosition =
+            //   (halfWidth * Vector3.right) + (halfHeight * Vector3.back);
         }
 
         /// <summary>
@@ -91,16 +89,16 @@ namespace GoogleARCore.Examples.AugmentedImage
             {
                 Models[0].SetActive(false);
                 Models[1].SetActive(false);
-                Models[2].SetActive(false);
-                Models[3].SetActive(false);
+              //  Models[2].SetActive(false);
+              //  Models[3].SetActive(false);
                 return;
             }
             if (Image.Name == "demo2" && Image.TrackingState == TrackingState.Tracking)
             {
-                Models[2].SetActive(true);
-                Models[3].SetActive(true);
+                Models[0].SetActive(false);
+                Models[1].SetActive(false);
             }
-            else if (Image.Name == "demo1" && Image.TrackingState == TrackingState.Tracking)
+            if (Image.Name == "demo1" && Image.TrackingState == TrackingState.Tracking)
             {
                 Models[0].SetActive(true);
                 Models[1].SetActive(true);
