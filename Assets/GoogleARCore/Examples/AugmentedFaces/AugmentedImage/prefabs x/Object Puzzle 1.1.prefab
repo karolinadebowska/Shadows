@@ -112,7 +112,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8874601964098166721}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.018, y: 0.018, z: 0.018}
   m_Children:
@@ -120,7 +120,7 @@ Transform:
   - {fileID: 5823805631290274132}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &644020984824349503
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -252,7 +252,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 36735285da953404b950c6667eb1845e, type: 2}
+      objectReference: {fileID: 2100000, guid: 2d5fb5c49f9f4c74a81b6e158b865c70, type: 2}
     - target: {fileID: 5703036728334877294, guid: 10470cf8453a37f46819bd60a71f7a16,
         type: 3}
       propertyPath: m_IgnoreNormalsForChartDetection

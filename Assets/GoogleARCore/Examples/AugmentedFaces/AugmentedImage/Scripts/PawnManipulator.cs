@@ -59,6 +59,7 @@ namespace GoogleARCore.Examples.ObjectManipulation
         /// <returns>True if the manipulation can be started.</returns>
         protected override bool CanStartManipulationForGesture(TapGesture gesture)
         {
+
             Debug.Log("demo2 in canstart "+controller.Demo2);
             if (count < 1 && controller.Demo2 == true && gesture.TargetObject == null)
             {
@@ -95,18 +96,18 @@ namespace GoogleARCore.Examples.ObjectManipulation
             controller = GameObject.Find("Controller").GetComponent<AugmentedImageController>();
         }
         public void disableObjects() {
-            Debug.Log("disableObject");
-            if (gameObject0 && gameObject1)
+            if (gameObject0.activeSelf)
             {
+                Debug.Log("disableObject");
                 gameObject0.SetActive(false);
                 gameObject1.SetActive(false);
             }
         }
         public void enableObjects()
         {
-            Debug.Log("disableObject");
             if (gameObject0 && gameObject1)
             {
+                Debug.Log("enableObject");
                 gameObject0.SetActive(true);
                 gameObject1.SetActive(true);
             }
@@ -139,35 +140,39 @@ namespace GoogleARCore.Examples.ObjectManipulation
                 gesture.StartPosition.x, gesture.StartPosition.y, raycastFilter, out hit))
             {
             */
-                //Debug.Log("demo2 inside count changer" + augmImgContr.Demo2);
-                // Use hit pose and camera pose to check if hittest is from the
-                // back of the plane, if it is, no need to create the anchor.
-                
-                /*if ((hit.Trackable is DetectedPlane) &&
-                    Vector3.Dot(FirstPersonCamera.transform.position - hit.Pose.position,
-                        hit.Pose.rotation * Vector3.up) < 0)
-                {
-                    Debug.Log("Hit at back of the current DetectedPlane");
-                }
-                // else if (controller._tempAugmentedImages[0].Name.Equals("demo2"))
-                // { 
-                else { */
-                    this.image = controller._tempAugmentedImages[0];
-                    Debug.Log("name of current demo :"+this.image.Name);
+            //Debug.Log("demo2 inside count changer" + augmImgContr.Demo2);
+            // Use hit pose and camera pose to check if hittest is from the
+            // back of the plane, if it is, no need to create the anchor.
+
+            /*if ((hit.Trackable is DetectedPlane) &&
+                Vector3.Dot(FirstPersonCamera.transform.position - hit.Pose.position,
+                    hit.Pose.rotation * Vector3.up) < 0)
+            {
+                Debug.Log("Hit at back of the current DetectedPlane");
+            }
+            // else if (controller._tempAugmentedImages[0].Name.Equals("demo2"))
+            // { 
+            else { */
+
+
+            int index = controller._tempAugmentedImages.FindIndex(x => x.Name == "demo2");
+            this.image = controller._tempAugmentedImages[index];
+            Debug.Log("here "+index+" "+controller._tempAugmentedImages[index].name);
+            //Debug.Log("name of current demo :"+this.image.Name);
                     pose = image.CenterPose;
                     count = count + 1;
                     Debug.Log("I shouldn't be a null objet: " + lamp);
                     Debug.Log("rotation "+pose.rotation);
-            gameObject0 = Instantiate(PawnPrefab[0], new Vector3(pose.position.x - 0.1f, pose.position.y, pose.position.z-0.05f), new Quaternion(-0.707f, 0f, 0f, 0.707f));
-                    gameObject1 = Instantiate(PawnPrefab[1], new Vector3(pose.position.x + 0.1f, pose.position.y, pose.position.z - 0.05f), pose.rotation);
+            gameObject0 = Instantiate(PawnPrefab[0], new Vector3(pose.position.x - 0.055f, pose.position.y, pose.position.z-0.03f), new Quaternion(-0.707f, 0f, 0f, 0.707f));
+                    gameObject1 = Instantiate(PawnPrefab[1], new Vector3(pose.position.x, pose.position.y, pose.position.z - 0.03f), new Quaternion(0f, 1f, 0f, 0f));
             //Debug.Log(hit.Pose.position + "= " + pose.position+"rotation :"+hit.Pose.rotation+" = "+pose.rotation);
 
           // Instantiate manipulator.
           var manipulator0 =
-                       Instantiate(ManipulatorPrefab, new Vector3(pose.position.x - 0.1f, pose.position.y, pose.position.z - 0.05f), pose.rotation);
+                       Instantiate(ManipulatorPrefab, new Vector3(pose.position.x - 0.055f, pose.position.y, pose.position.z - 0.03f), pose.rotation);
                     //var manipulator1 = Instantiate(ManipulatorPrefab, new Vector3(pose.position.x + 0.1f, pose.position.y, pose.position.z - 0.1f), pose.rotation);
                 var manipulator1 =
-                  Instantiate(ManipulatorPrefab, new Vector3(pose.position.x + 0.1f, pose.position.y, pose.position.z - 0.05f), pose.rotation);
+                  Instantiate(ManipulatorPrefab, new Vector3(pose.position.x, pose.position.y, pose.position.z - 0.03f), pose.rotation);
                 // Make game object a child of the manipulator.
 
                 gameObject0.transform.parent = manipulator0.transform;
@@ -178,8 +183,8 @@ namespace GoogleARCore.Examples.ObjectManipulation
                     // Create an anchor to allow ARCore to track the hitpoint as understanding of
                     // the physical world evolves.
                     Debug.Log("Image: " + image+" Count: "+count);
-                var anchor0 = image.CreateAnchor(new Pose(new Vector3(pose.position.x - 0.1f, pose.position.y, pose.position.z - 0.05f), pose.rotation));
-                var anchor1 = image.CreateAnchor(new Pose(new Vector3(pose.position.x + 0.1f, pose.position.y, pose.position.z - 0.05f), pose.rotation));
+                var anchor0 = image.CreateAnchor(new Pose(new Vector3(pose.position.x - 0.055f, pose.position.y, pose.position.z - 0.03f), pose.rotation));
+                var anchor1 = image.CreateAnchor(new Pose(new Vector3(pose.position.x, pose.position.y, pose.position.z - 0.03f), pose.rotation));
 
                 // Make manipulator a child of the anchor.
                 manipulator0.transform.parent = anchor0.transform;

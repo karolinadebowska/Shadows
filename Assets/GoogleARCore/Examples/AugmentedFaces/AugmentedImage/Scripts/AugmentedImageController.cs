@@ -164,6 +164,7 @@ namespace GoogleARCore.Examples.AugmentedImage
                     }
                     else if (!Demo2 && image.Name.Equals("demo2"))
                     {
+                        Debug.Log("calling disableObjects");
                         pawn.disableObjects();
                     }
                 }
@@ -192,8 +193,8 @@ namespace GoogleARCore.Examples.AugmentedImage
                     }
                     else if (visualizer.Image.Name.Equals("demo2"))
                     {
-                        pawn.enableObjects();
                         Demo2 = true;
+                        pawn.enableObjects();
                         HideUI();
                         LoadingOverlay.SetActive(false);
                         if (!clicked2)

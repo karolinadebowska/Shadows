@@ -69,6 +69,8 @@ namespace GoogleARCore
             }
         }
 
+        public string name { get; internal set; }
+
         /// <summary>
         /// Gets the position and orientation of the image's center in Unity world coordinates. The Y-axis points
         /// perpendicular out of the image. The X-axis points from left to right on the image, and the Z-axis
