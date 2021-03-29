@@ -23,6 +23,7 @@ namespace GoogleARCore.Examples.ObjectManipulation
     using GoogleARCore;
     using GoogleARCore.Examples.AugmentedImage;
     using UnityEngine;
+    using System;
 
     /// <summary>
     /// Controls the placement of objects via a tap gesture.
@@ -34,20 +35,29 @@ namespace GoogleARCore.Examples.ObjectManipulation
         /// background).
         /// </summary>
         public Camera FirstPersonCamera;
-        //public Examples.AugmentedImage.AugmentedImageController augmImgContr;
-        private int count = 0;
+
+        private int clickCount = 0;
         public AugmentedImageController controller;
-        private GameObject prefab;
         /// <summary>
         /// A prefab to place when a raycast from a user touch hits a plane.
         /// </summary>
         public GameObject[] PawnPrefab;
         [HideInInspector]
-        public static GameObject puzzle;
-        [HideInInspector]
-        public static GameObject lamp;
-        public static GameObject gameObject0;
-        public static GameObject gameObject1;
+        private Pose pose;
+        public static bool _gameMode = false;
+        public static bool GameMode
+        {
+            get
+            { return _gameMode; }
+            set
+            { _gameMode = value; }
+        }
+        private AugmentedImage image;
+        private float lengthX;
+        private static GameObject gameObject0;
+        private static GameObject gameObject1;
+        private Vector3 lampOriginalPosition;
+        private bool firstTimeGameOn = true;
         /// <summary>
         /// Manipulator prefab to attach placed objects to.
         /// </summary>
@@ -60,8 +70,8 @@ namespace GoogleARCore.Examples.ObjectManipulation
         protected override bool CanStartManipulationForGesture(TapGesture gesture)
         {
 
-            Debug.Log("demo2 in canstart "+controller.Demo2);
-            if (count < 1 && controller.Demo2 == true && gesture.TargetObject == null)
+           // Debug.Log("demo2 in canstart " + controller.Demo2);
+            if (clickCount < 1 && controller.Demo2 == true && gesture.TargetObject == null)
             {
                 //Initialize();
                 Debug.Log("can start manipulation");
@@ -70,13 +80,60 @@ namespace GoogleARCore.Examples.ObjectManipulation
             return false;
         }
         /*
-        public void RemoveObjects() {
-            Debug.Log("remove objects");
-            GameObject.Destroy(gameObject0);
-            GameObject.Destroy(gameObject1);
-            count = 0;
-        }*/
-        /*
+                 /// <summary>
+        /// Function called when this game object becomes the Selected Object.
+        /// </summary>
+        protected override void OnSelected()
+        {
+            // Optional override.
+        }
+        */
+       
+        //Function to get a random number 
+        private static readonly System.Random random = new System.Random();
+        private static readonly object syncLock = new object();
+        public static float generateRandom(float min, float max)
+        {
+            lock (syncLock)
+            {
+                double val = (random.NextDouble() * (max - min) + min);
+                return (float)val;
+            }
+        }
+        private float xUpperBound, xLowerBound;
+        private float zUpperBound, zLowerBound;
+        public void turnGameMode() {
+            GameMode = true;
+            Debug.Log("lamp original position: " + lampOriginalPosition + " " + gameObject0.transform.position + " " + gameObject0.transform.localPosition);
+            //z max 0.2f, min -0.1f, x max: 0.1f, min: -0.04
+
+            if (firstTimeGameOn) {
+                lampOriginalPosition = gameObject0.transform.position;
+                xUpperBound = lampOriginalPosition.x + 0.3f;
+                xLowerBound = lampOriginalPosition.x - 0.05f;
+                zUpperBound = lampOriginalPosition.z + 0.1f;
+                zLowerBound = lampOriginalPosition.z - 0.3f;
+            }
+            Debug.Log(new Vector3(lampOriginalPosition.x, lampOriginalPosition.y, lampOriginalPosition.z + 0.2f));
+            //disable movement
+            gameObject0.transform.parent = null;
+            Debug.Log(new Vector3(lampOriginalPosition.x + generateRandom(xLowerBound, xUpperBound), lampOriginalPosition.y, lampOriginalPosition.z + generateRandom(zLowerBound, zUpperBound)));
+            float valueX = generateRandom(xLowerBound, xUpperBound);
+            if (Math.Abs(valueX - xLowerBound) > Math.Abs(valueX - zUpperBound))
+            {
+                Debug.Log("rotation " + gameObject0.transform.rotation);
+                Vector3 rotationVector = new Vector3(-90, 180, 0);
+                gameObject0.transform.rotation = Quaternion.Euler(rotationVector);
+            }
+            else {
+                gameObject0.transform.rotation = new Quaternion(-0.707f, 0f, 0f, 0.707f);
+            }
+            float valueZ = generateRandom(zLowerBound, zUpperBound);
+            gameObject0.transform.position = new Vector3(lampOriginalPosition.x + valueX, lampOriginalPosition.y, lampOriginalPosition.z + valueZ);
+            firstTimeGameOn = false;
+        }
+
+/*      
         public void Initialize()
         {
             Debug.Log("awake in pawn");
@@ -94,11 +151,12 @@ namespace GoogleARCore.Examples.ObjectManipulation
         public void Start()
         {
             controller = GameObject.Find("Controller").GetComponent<AugmentedImageController>();
+            clickCount = 0;
         }
         public void disableObjects() {
             if (gameObject0.activeSelf)
             {
-                Debug.Log("disableObject");
+                //Debug.Log("disableObject");
                 gameObject0.SetActive(false);
                 gameObject1.SetActive(false);
             }
@@ -107,14 +165,12 @@ namespace GoogleARCore.Examples.ObjectManipulation
         {
             if (gameObject0 && gameObject1)
             {
-                Debug.Log("enableObject");
+                //Debug.Log("enableObject");
                 gameObject0.SetActive(true);
                 gameObject1.SetActive(true);
             }
         }
 
-        public Pose pose;
-        public AugmentedImage image;
         /// <summary>
         /// Function called when the manipulation is ended.
         /// </summary>
@@ -125,83 +181,38 @@ namespace GoogleARCore.Examples.ObjectManipulation
             {
                 return;
             }
-
             // If gesture is targeting an existing object we are done.
             if (gesture.TargetObject != null)
             {
                 return;
             }
-            /*
-            // Raycast against the location the player touched to search for planes.
-            TrackableHit hit;
-            TrackableHitFlags raycastFilter = TrackableHitFlags.PlaneWithinPolygon;
 
-            if (Frame.Raycast(
-                gesture.StartPosition.x, gesture.StartPosition.y, raycastFilter, out hit))
+            if (clickCount < 1)
             {
-            */
-            //Debug.Log("demo2 inside count changer" + augmImgContr.Demo2);
-            // Use hit pose and camera pose to check if hittest is from the
-            // back of the plane, if it is, no need to create the anchor.
-
-            /*if ((hit.Trackable is DetectedPlane) &&
-                Vector3.Dot(FirstPersonCamera.transform.position - hit.Pose.position,
-                    hit.Pose.rotation * Vector3.up) < 0)
-            {
-                Debug.Log("Hit at back of the current DetectedPlane");
-            }
-            // else if (controller._tempAugmentedImages[0].Name.Equals("demo2"))
-            // { 
-            else { */
-
-
-            int index = controller._tempAugmentedImages.FindIndex(x => x.Name == "demo2");
-            this.image = controller._tempAugmentedImages[index];
-            Debug.Log("here "+index+" "+controller._tempAugmentedImages[index].name);
-            //Debug.Log("name of current demo :"+this.image.Name);
-                    pose = image.CenterPose;
-                    count = count + 1;
-                    Debug.Log("I shouldn't be a null objet: " + lamp);
-                    Debug.Log("rotation "+pose.rotation);
-            gameObject0 = Instantiate(PawnPrefab[0], new Vector3(pose.position.x - 0.055f, pose.position.y, pose.position.z-0.03f), new Quaternion(-0.707f, 0f, 0f, 0.707f));
-                    gameObject1 = Instantiate(PawnPrefab[1], new Vector3(pose.position.x, pose.position.y, pose.position.z - 0.03f), new Quaternion(0f, 1f, 0f, 0f));
-            //Debug.Log(hit.Pose.position + "= " + pose.position+"rotation :"+hit.Pose.rotation+" = "+pose.rotation);
-
-          // Instantiate manipulator.
-          var manipulator0 =
-                       Instantiate(ManipulatorPrefab, new Vector3(pose.position.x - 0.055f, pose.position.y, pose.position.z - 0.03f), pose.rotation);
-                    //var manipulator1 = Instantiate(ManipulatorPrefab, new Vector3(pose.position.x + 0.1f, pose.position.y, pose.position.z - 0.1f), pose.rotation);
-                var manipulator1 =
-                  Instantiate(ManipulatorPrefab, new Vector3(pose.position.x, pose.position.y, pose.position.z - 0.03f), pose.rotation);
+                clickCount = clickCount + 1;
+                //find an image to place an anchor
+                int index = controller._tempAugmentedImages.FindIndex(x => x.Name == "demo2");
+                image = controller._tempAugmentedImages[index];
+                pose = image.CenterPose;
+                //instatntiate game objects
+                gameObject0 = Instantiate(PawnPrefab[0], new Vector3(pose.position.x - 0.055f, pose.position.y, pose.position.z - 0.03f), new Quaternion(-0.707f, 0f, 0f, 0.707f));
+                gameObject1 = Instantiate(PawnPrefab[1], new Vector3(pose.position.x, pose.position.y, pose.position.z - 0.03f), new Quaternion(0f, 1f, 0f, 0f));
+                // Instantiate manipulators
+                var manipulator0 = Instantiate(ManipulatorPrefab, new Vector3(pose.position.x - 0.055f, pose.position.y, pose.position.z - 0.03f), pose.rotation);
+                var manipulator1 = Instantiate(ManipulatorPrefab, new Vector3(pose.position.x, pose.position.y, pose.position.z - 0.03f), pose.rotation);
                 // Make game object a child of the manipulator.
-
                 gameObject0.transform.parent = manipulator0.transform;
                 gameObject1.transform.parent = manipulator1.transform;
-                    // Make game object a child of the manipulator.
-                    //gameObject1.transform.parent = manipulator1.transform;
-                    //gameObject.transform.parent = manipulator.transform;
-                    // Create an anchor to allow ARCore to track the hitpoint as understanding of
-                    // the physical world evolves.
-                    Debug.Log("Image: " + image+" Count: "+count);
+                // Create an anchor to allow ARCore to track the image
                 var anchor0 = image.CreateAnchor(new Pose(new Vector3(pose.position.x - 0.055f, pose.position.y, pose.position.z - 0.03f), pose.rotation));
                 var anchor1 = image.CreateAnchor(new Pose(new Vector3(pose.position.x, pose.position.y, pose.position.z - 0.03f), pose.rotation));
-
                 // Make manipulator a child of the anchor.
                 manipulator0.transform.parent = anchor0.transform;
                 manipulator1.transform.parent = anchor1.transform;
                 // Select the placed object.
                 manipulator0.GetComponent<Manipulator>().Select();
                 manipulator1.GetComponent<Manipulator>().Select();
-                // the physical world evolves.
-                // var anchor1 = hit.Trackable.CreateAnchor(new Pose(new Vector3(hit.Pose.position.x + 0.1f, hit.Pose.position.y, hit.Pose.position.z), hit.Pose.rotation));
-                // Pose pose = Pose.ctor(new Vector3(-0.4f, -0.5f, -0.5f), Quarternion)
-                // Make manipulator a child of the anchor.
-                //manipulator1.transform.parent = anchor1.transform;
-
-                // Select the placed object.
-                //manipulator1.GetComponent<Manipulator>().Select();
-                // }
-           // }
+            }
         }
     }
 }

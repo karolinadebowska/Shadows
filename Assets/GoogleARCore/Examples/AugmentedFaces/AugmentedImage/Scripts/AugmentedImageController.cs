@@ -46,22 +46,6 @@ namespace GoogleARCore.Examples.AugmentedImage
         /// </summary>
         public AugmentedImageVisualizer AugmentedImageVisualizerPrefab;
         public Text amPm;
-
-        public bool _demo2;
-        public bool Demo2
-        {
-            get
-            {
-                // Reads are usually simple
-                return _demo2;
-            }
-            set
-            {
-                // You can add logic here for race conditions,
-                // or other measurements
-                _demo2 = value;
-            }
-        }
         /// <summary>
         /// The overlay containing the fit to scan user guide.
         /// </summary>
@@ -69,27 +53,34 @@ namespace GoogleARCore.Examples.AugmentedImage
         public GameObject LoadingDemo1;
         public GameObject LoadingDemo2;
 
-        public GameObject mainSlider;
-        public PawnManipulator pawn;
-        public static Slider secondarySlider;
-        
-        public CanvasGroup canvasGroup;
+        //public GameObject mainSlider;
+        public PawnManipulator manipulator;
 
+        public CanvasGroup canvasGroupDemo1, canvasGroupDemo2;
+        public AugmentedImageVisualizer visualizer = null;
         private Dictionary<int, AugmentedImageVisualizer> _visualizers
             = new Dictionary<int, AugmentedImageVisualizer>();
         public List<AugmentedImage> _tempAugmentedImages = new List<AugmentedImage>();
         public int counter = 0;
+        [HideInInspector]
+        public bool _demo2;
+        [HideInInspector]
+        public bool Demo2
+        {
+            get {return _demo2; }
+            set {_demo2 = value;}
+        }
 
-        void HideUI()
+        void HideUI(CanvasGroup canvasGroup)
         {
             canvasGroup.alpha = 0f; //this makes everything transparent
             canvasGroup.blocksRaycasts = false; //this prevents the UI element to receive input events
         }
-        void ShowUI()
+        void ShowUI(CanvasGroup canvasGroup)
         {
             canvasGroup.alpha = 1f;
             canvasGroup.blocksRaycasts = true;
-            if (GameObject.FindGameObjectWithTag("amPm"))
+            if (canvasGroup == canvasGroupDemo1 && GameObject.FindGameObjectWithTag("amPm"))
             {
                 amPm = (Text)FindObjectOfType(typeof(Text));
                 amPm.gameObject.SetActive(true);
@@ -106,12 +97,58 @@ namespace GoogleARCore.Examples.AugmentedImage
             // Enable ARCore to target 60fps camera capture frame rate on supported devices.
             // Note, Application.targetFrameRate is ignored when QualitySettings.vSyncCount != 0.
             Application.targetFrameRate = 60;
-            HideUI();
-            if (GameObject.FindGameObjectWithTag("secondarySlider"))
+            HideUI(canvasGroupDemo1);
+            HideUI(canvasGroupDemo2);
+        }
+        private void switchDemos(AugmentedImage image) {
+            if (Demo2 && image.Name.Equals("demo1"))
             {
-                secondarySlider = (Slider)FindObjectOfType(typeof(Slider));
-                secondarySlider.gameObject.SetActive(false);
-            }            
+                //remove the object
+                _visualizers.Remove(image.DatabaseIndex);
+                GameObject.Destroy(visualizer.gameObject);
+            }
+            else if (!Demo2 && image.Name.Equals("demo2"))
+            {
+                //Debug.Log("calling disableObjects");
+                manipulator.disableObjects();
+            }
+        }
+        private void displayControl() {
+            foreach (var visualizer in _visualizers.Values)
+            {
+                if (visualizer.Image.TrackingMethod == AugmentedImageTrackingMethod.FullTracking)
+                {
+                    if (visualizer.Image.Name.Equals("demo1"))
+                    {
+                        Demo2 = false;
+                        LoadingOverlay.SetActive(false);
+                        HideUI(canvasGroupDemo2);
+                        //disable landscape mode
+                        Screen.autorotateToLandscapeRight = false;
+                        Screen.autorotateToLandscapeLeft = false;
+                        if (!clicked1)
+                            LoadingDemo1.SetActive(true);
+                        else
+                            ShowUI(canvasGroupDemo1);
+                    }
+                    else if (visualizer.Image.Name.Equals("demo2"))
+                    {
+                        Demo2 = true;
+                        manipulator.enableObjects();
+                        HideUI(canvasGroupDemo1);
+                        LoadingOverlay.SetActive(false);
+                        if (!clicked2)
+                            LoadingDemo2.SetActive(true);
+                        else
+                            ShowUI(canvasGroupDemo2);
+                        //enable landscape mode
+                        Screen.autorotateToLandscapeRight = true;
+                        Screen.autorotateToLandscapeLeft = true;
+                    }
+                    return;
+                }
+                // LoadingOverlay.SetActive(true);
+            }
         }
 
         /// <summary>
@@ -142,8 +179,6 @@ namespace GoogleARCore.Examples.AugmentedImage
             // not previously have a visualizer. Remove visualizers for stopped images.
             foreach (var image in _tempAugmentedImages)
             {
-               // Debug.Log("image : "+image.Name+" tracking method "+image.TrackingMethod);
-                AugmentedImageVisualizer visualizer = null;
                 _visualizers.TryGetValue(image.DatabaseIndex, out visualizer);
                 if (image.TrackingMethod == AugmentedImageTrackingMethod.FullTracking && visualizer == null)
                 {
@@ -153,70 +188,28 @@ namespace GoogleARCore.Examples.AugmentedImage
                     visualizer.Image = image;
                     _visualizers.Add(image.DatabaseIndex, visualizer);
                 }
-                //remove not current visualizer                
+                //remove not a current visualizer                
                 else if (image.TrackingMethod == AugmentedImageTrackingMethod.LastKnownPose && visualizer != null)
                 {
-                    if (Demo2 && image.Name.Equals("demo1"))
-                    {
-                        //remove the object
-                        _visualizers.Remove(image.DatabaseIndex);
-                        GameObject.Destroy(visualizer.gameObject);
-                    }
-                    else if (!Demo2 && image.Name.Equals("demo2"))
-                    {
-                        Debug.Log("calling disableObjects");
-                        pawn.disableObjects();
-                    }
+                    switchDemos(image);
                 }
+                //destroy objects that are not being tracked
                 else if (image.TrackingMethod == AugmentedImageTrackingMethod.NotTracking && visualizer != null)
                 {
                     _visualizers.Remove(image.DatabaseIndex);
                     GameObject.Destroy(visualizer.gameObject);
                 }
             }
-            // Show the fit-to-scan overlay if there are no images that are Tracking.
-            foreach (var visualizer in _visualizers.Values)
-            {
-                if (visualizer.Image.TrackingMethod == AugmentedImageTrackingMethod.FullTracking)
-                {
-                    if (visualizer.Image.Name.Equals("demo1"))
-                    {
-                        Demo2 = false;
-                        LoadingOverlay.SetActive(false);
-                        //disable landscape mode
-                        Screen.autorotateToLandscapeRight = false;
-                        Screen.autorotateToLandscapeLeft = false;
-                        if (!clicked1)
-                            LoadingDemo1.SetActive(true);
-                        else
-                            ShowUI();
-                    }
-                    else if (visualizer.Image.Name.Equals("demo2"))
-                    {
-                        Demo2 = true;
-                        pawn.enableObjects();
-                        HideUI();
-                        LoadingOverlay.SetActive(false);
-                        if (!clicked2)
-                            LoadingDemo2.SetActive(true);
-
-                        //enable landscape mode
-                        Screen.autorotateToLandscapeRight = true;
-                        Screen.autorotateToLandscapeLeft = true;
-
-
-                    }
-                    return;
-                }
-               // LoadingOverlay.SetActive(true);
-            }
+            // Show the fit-to-scan overlay if there are no images that are being tracked
+            displayControl();
         }
+
         private bool clicked1 = false;
         private bool clicked2 = false;
         public void onClick1() {
             LoadingDemo1.SetActive(false);
             clicked1 = true;
-            ShowUI();
+            ShowUI(canvasGroupDemo1);
         }
         public void onClick2()
         {

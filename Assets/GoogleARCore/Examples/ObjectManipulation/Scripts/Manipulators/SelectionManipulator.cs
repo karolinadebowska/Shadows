@@ -43,7 +43,8 @@ namespace GoogleARCore.Examples.ObjectManipulation
         public void OnElevationChanged(float elevation)
         {
             _scaledElevation = elevation * transform.localScale.y;
-            SelectionVisualization.transform.localPosition = new Vector3(0, -elevation, 0);
+            if(SelectionVisualization)
+                SelectionVisualization.transform.localPosition = new Vector3(0, -elevation, 0);
         }
 
         /// <summary>
@@ -56,8 +57,8 @@ namespace GoogleARCore.Examples.ObjectManipulation
         public void OnElevationChangedScaled(float scaledElevation)
         {
             _scaledElevation = scaledElevation;
-            SelectionVisualization.transform.localPosition =
-                new Vector3(0, -scaledElevation / transform.localScale.y, 0);
+            if (SelectionVisualization)
+                SelectionVisualization.transform.localPosition = new Vector3(0, -scaledElevation / transform.localScale.y, 0);
         }
 
         /// <summary>
@@ -69,7 +70,8 @@ namespace GoogleARCore.Examples.ObjectManipulation
             if (transform.hasChanged)
             {
                 float height = -_scaledElevation / transform.localScale.y;
-                SelectionVisualization.transform.localPosition = new Vector3(0, height, 0);
+                if (SelectionVisualization)
+                    SelectionVisualization.transform.localPosition = new Vector3(0, height, 0);
             }
         }
 
@@ -121,7 +123,8 @@ namespace GoogleARCore.Examples.ObjectManipulation
         /// </summary>
         protected override void OnSelected()
         {
-            SelectionVisualization.SetActive(true);
+            if (SelectionVisualization)
+                SelectionVisualization.SetActive(true);
         }
 
         /// <summary>
@@ -129,7 +132,8 @@ namespace GoogleARCore.Examples.ObjectManipulation
         /// </summary>
         protected override void OnDeselected()
         {
-            SelectionVisualization.SetActive(false);
+            if (SelectionVisualization)
+                SelectionVisualization.SetActive(false);
         }
     }
 }

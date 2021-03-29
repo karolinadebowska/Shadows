@@ -36,16 +36,9 @@ public class SunMovement : MonoBehaviour
     public static bool DrawLines
     {
         get
-        {
-            // Reads are usually simple
-            return _drawLines;
-        }
+        {return _drawLines; }
         set
-        {
-            // You can add logic here for race conditions,
-            // or other measurements
-            _drawLines = value;
-        }
+        {_drawLines = value;}
     }
     private static float _timeOfDay;
     public static float TimeOfDay
