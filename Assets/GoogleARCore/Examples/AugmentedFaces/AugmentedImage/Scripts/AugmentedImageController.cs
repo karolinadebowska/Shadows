@@ -20,8 +20,8 @@
 
 namespace GoogleARCore.Examples.AugmentedImage
 {
+    using System.Collections;
     using System.Collections.Generic;
-    using System.Runtime.InteropServices;
     using GoogleARCore;
     using GoogleARCore.Examples.ObjectManipulation;
     using UnityEngine;
@@ -52,7 +52,8 @@ namespace GoogleARCore.Examples.AugmentedImage
         public GameObject LoadingOverlay;
         public GameObject LoadingDemo1;
         public GameObject LoadingDemo2;
-
+        public GameObject QuestionDemo2;
+        public GameObject Demo2Success;
         //public GameObject mainSlider;
         public PawnManipulator manipulator;
 
@@ -61,6 +62,7 @@ namespace GoogleARCore.Examples.AugmentedImage
         private Dictionary<int, AugmentedImageVisualizer> _visualizers
             = new Dictionary<int, AugmentedImageVisualizer>();
         public List<AugmentedImage> _tempAugmentedImages = new List<AugmentedImage>();
+        [HideInInspector]
         public int counter = 0;
         [HideInInspector]
         public bool _demo2;
@@ -94,6 +96,9 @@ namespace GoogleARCore.Examples.AugmentedImage
         {
             LoadingDemo1.SetActive(false);
             LoadingDemo2.SetActive(false);
+            QuestionDemo2.SetActive(false);
+            Demo2Success.SetActive(false);
+      
             // Enable ARCore to target 60fps camera capture frame rate on supported devices.
             // Note, Application.targetFrameRate is ignored when QualitySettings.vSyncCount != 0.
             Application.targetFrameRate = 60;
@@ -113,7 +118,19 @@ namespace GoogleARCore.Examples.AugmentedImage
                 manipulator.disableObjects();
             }
         }
-        private void displayControl() {
+        
+    IEnumerator waiter(float s)
+    {
+        //Print the time of when the function is first called.
+        Debug.Log("Started Coroutine at timestamp : " + Time.time);
+
+        //yield on a new YieldInstruction that waits for 5 seconds.
+        yield return new WaitForSeconds(5);
+
+        //After we have waited 5 seconds print the time again.
+        Debug.Log("Finished Coroutine at timestamp : " + Time.time);
+        }
+    private void displayControl() {
             foreach (var visualizer in _visualizers.Values)
             {
                 if (visualizer.Image.TrackingMethod == AugmentedImageTrackingMethod.FullTracking)
@@ -144,6 +161,21 @@ namespace GoogleARCore.Examples.AugmentedImage
                         //enable landscape mode
                         Screen.autorotateToLandscapeRight = true;
                         Screen.autorotateToLandscapeLeft = true;
+                        if (manipulator.GameMode)
+                        {
+                            //the first time user launches the game
+                            if (!readyToPlayDemo2)
+                            {
+                                QuestionDemo2.SetActive(true);
+                                Camera.main.cullingMask = ~(1 << 9);
+                            }
+                            else if (manipulator.GameWon){
+                                Camera.main.cullingMask = -1;
+                                StartCoroutine(waiter(2));
+                                //podmien overlay
+                                Demo2Success.SetActive(true);
+                            }
+                        }
                     }
                     return;
                 }
@@ -206,6 +238,7 @@ namespace GoogleARCore.Examples.AugmentedImage
 
         private bool clicked1 = false;
         private bool clicked2 = false;
+        private bool readyToPlayDemo2 = false;
         public void onClick1() {
             LoadingDemo1.SetActive(false);
             clicked1 = true;
@@ -215,6 +248,23 @@ namespace GoogleARCore.Examples.AugmentedImage
         {
             LoadingDemo2.SetActive(false);
             clicked2 = true;
+        }
+        public void wantToPlay()
+        {
+            QuestionDemo2.SetActive(false);
+            readyToPlayDemo2 = true;
+        }
+        public void playAgainDemo2() {
+            Camera.main.cullingMask = ~(1 << 9);
+            Demo2Success.SetActive(false);
+            manipulator.GameWon = false;
+        }
+        public void endGameDemo2()
+        {
+            manipulator.GameMode = false;
+            manipulator.GameWon = false;
+            Demo2Success.SetActive(false);
+            readyToPlayDemo2 = false;
         }
     }
 }

@@ -30,7 +30,10 @@ namespace GoogleARCore.Examples.ObjectManipulation
         private bool _isManipulating;
 
         private GameObject _selectedObject;
-
+        /// <summary>
+        /// Gets the current selected object.
+        /// </summary> 
+        public GameObject SelectedObject { get { return _selectedObject;} private set { _selectedObject = value;} }
         /// <summary>
         /// Makes this game object become the Selected Object.
         /// </summary>

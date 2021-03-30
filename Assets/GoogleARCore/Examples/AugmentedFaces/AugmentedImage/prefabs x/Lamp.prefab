@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2563766891792755223}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: lampBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 8794950367471280484}
   - component: {fileID: 1890136878148299508}
   - component: {fileID: 5055016412528895075}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -139,7 +139,7 @@ GameObject:
   - component: {fileID: 3708259290272378187}
   - component: {fileID: 8386461589498077782}
   - component: {fileID: 5293082998238419797}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: upperBranch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7964,7 +7964,7 @@ GameObject:
   - component: {fileID: 5637741420889783996}
   - component: {fileID: 3670394345656855093}
   - component: {fileID: 7396411088552033871}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Pipe (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15773,7 +15773,7 @@ GameObject:
   - component: {fileID: 2004159432891342237}
   - component: {fileID: 218774249544063885}
   - component: {fileID: 8684060953605335262}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Pipe (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -23583,7 +23583,7 @@ GameObject:
   - component: {fileID: 6630545231731538404}
   - component: {fileID: 3207709405671688608}
   - component: {fileID: 6364062415979462960}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Pipe (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -31389,7 +31389,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 375813998234245968}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: lowerBranch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -31427,7 +31427,7 @@ GameObject:
   - component: {fileID: 8270081112752140192}
   - component: {fileID: 1048902050138854089}
   - component: {fileID: 1802610925259359217}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Pipe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39235,7 +39235,7 @@ GameObject:
   - component: {fileID: 982499048402550964}
   - component: {fileID: 8818909801485484031}
   - component: {fileID: 4028490653616559750}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Spot Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39324,7 +39324,7 @@ Halo:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6069671680683380597}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
@@ -39342,7 +39342,7 @@ GameObject:
   - component: {fileID: 2612059578247746871}
   - component: {fileID: 4860260068637370335}
   - component: {fileID: 5547735590585214593}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Pipe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47151,7 +47151,7 @@ GameObject:
   - component: {fileID: 1737352392022268469}
   - component: {fileID: 1140957076762094755}
   - component: {fileID: 6793346951828453771}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Pipe (9)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54957,7 +54957,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 947626749831580892}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54992,7 +54992,7 @@ GameObject:
   - component: {fileID: 247217101133428249}
   - component: {fileID: 3987291669713060059}
   - component: {fileID: 2318351956297807611}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Pipe (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -62799,7 +62799,7 @@ GameObject:
   - component: {fileID: 2626977325798716528}
   - component: {fileID: 1084274324630544811}
   - component: {fileID: 7245128789800755342}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Lamp
   m_TagString: lamp
   m_Icon: {fileID: 0}
@@ -62887,7 +62887,7 @@ GameObject:
   - component: {fileID: 6995772553037874131}
   - component: {fileID: 572536638955204124}
   - component: {fileID: 5989991166583168861}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cone (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -64715,7 +64715,7 @@ GameObject:
   - component: {fileID: 3590980142910132101}
   - component: {fileID: 6101812037908215775}
   - component: {fileID: 1532203054839036174}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Pipe (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95643,6 +95643,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ShadowQuad
+      objectReference: {fileID: 0}
+    - target: {fileID: 392932033036764408, guid: ee299cba995ba6a418786938435e14c1,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee299cba995ba6a418786938435e14c1, type: 3}

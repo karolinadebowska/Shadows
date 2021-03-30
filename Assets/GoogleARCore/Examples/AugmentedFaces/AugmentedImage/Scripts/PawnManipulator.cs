@@ -35,9 +35,16 @@ namespace GoogleARCore.Examples.ObjectManipulation
         /// background).
         /// </summary>
         public Camera FirstPersonCamera;
-
         private int clickCount = 0;
         public AugmentedImageController controller;
+        public static bool _gameWon = false;
+        public bool GameWon
+        {
+            get
+            { return _gameWon; }
+            set
+            { _gameWon = value; }
+        }
         /// <summary>
         /// A prefab to place when a raycast from a user touch hits a plane.
         /// </summary>
@@ -45,7 +52,7 @@ namespace GoogleARCore.Examples.ObjectManipulation
         [HideInInspector]
         private Pose pose;
         public static bool _gameMode = false;
-        public static bool GameMode
+        public bool GameMode
         {
             get
             { return _gameMode; }
@@ -53,11 +60,10 @@ namespace GoogleARCore.Examples.ObjectManipulation
             { _gameMode = value; }
         }
         private AugmentedImage image;
-        private float lengthX;
         private static GameObject gameObject0;
         private static GameObject gameObject1;
         private Vector3 lampOriginalPosition;
-        private bool firstTimeGameOn = true;
+        public bool firstTimeGameOn = true;
         /// <summary>
         /// Manipulator prefab to attach placed objects to.
         /// </summary>
@@ -69,26 +75,35 @@ namespace GoogleARCore.Examples.ObjectManipulation
         /// <returns>True if the manipulation can be started.</returns>
         protected override bool CanStartManipulationForGesture(TapGesture gesture)
         {
-
-           // Debug.Log("demo2 in canstart " + controller.Demo2);
-            if (clickCount < 1 && controller.Demo2 == true && gesture.TargetObject == null)
+            
+            if (controller.Demo2 == true)
             {
-                //Initialize();
-                Debug.Log("can start manipulation");
+                if (gesture.TargetObject == null)
+                {
+                    //Initialize();
+                    Debug.Log("can start manipulation");
+                }
+                else if (GameMode && gesture.TargetObject != null)
+                {
+                    RaycastHit hitobject;
+                    Ray ray = FirstPersonCamera.ScreenPointToRay(Input.GetTouch(0).position);
+                    if (Physics.Raycast(ray, out hitobject)) { 
+
+                        Debug.Log(hitobject.transform.name+ " "+ hitobject.transform.tag);
+                        // Check if what is hit is the desired object
+                        if (hitobject.transform.tag == "lamp")
+                        {
+                            // User clicked the object.. Do something here..
+                            Debug.Log("hurra");
+                            GameWon = true;
+                           //return false;
+                        }
+                    }
+                }
                 return true;
             }
             return false;
         }
-        /*
-                 /// <summary>
-        /// Function called when this game object becomes the Selected Object.
-        /// </summary>
-        protected override void OnSelected()
-        {
-            // Optional override.
-        }
-        */
-       
         //Function to get a random number 
         private static readonly System.Random random = new System.Random();
         private static readonly object syncLock = new object();
@@ -104,6 +119,8 @@ namespace GoogleARCore.Examples.ObjectManipulation
         private float zUpperBound, zLowerBound;
         public void turnGameMode() {
             GameMode = true;
+            Debug.Log("camera: " + FirstPersonCamera);
+            //FirstPersonCamera.cullingMask = ~(1 << 9);
             Debug.Log("lamp original position: " + lampOriginalPosition + " " + gameObject0.transform.position + " " + gameObject0.transform.localPosition);
             //z max 0.2f, min -0.1f, x max: 0.1f, min: -0.04
 
@@ -114,11 +131,11 @@ namespace GoogleARCore.Examples.ObjectManipulation
                 zUpperBound = lampOriginalPosition.z + 0.1f;
                 zLowerBound = lampOriginalPosition.z - 0.3f;
             }
-            Debug.Log(new Vector3(lampOriginalPosition.x, lampOriginalPosition.y, lampOriginalPosition.z + 0.2f));
             //disable movement
-            gameObject0.transform.parent = null;
-            Debug.Log(new Vector3(lampOriginalPosition.x + generateRandom(xLowerBound, xUpperBound), lampOriginalPosition.y, lampOriginalPosition.z + generateRandom(zLowerBound, zUpperBound)));
+           //gameObject0.transform.parent = null;
             float valueX = generateRandom(xLowerBound, xUpperBound);
+            float valueZ = generateRandom(zLowerBound, zUpperBound);
+            Debug.Log(new Vector3(lampOriginalPosition.x + valueX, lampOriginalPosition.y, lampOriginalPosition.z + valueZ));
             if (Math.Abs(valueX - xLowerBound) > Math.Abs(valueX - zUpperBound))
             {
                 Debug.Log("rotation " + gameObject0.transform.rotation);
@@ -128,7 +145,6 @@ namespace GoogleARCore.Examples.ObjectManipulation
             else {
                 gameObject0.transform.rotation = new Quaternion(-0.707f, 0f, 0f, 0.707f);
             }
-            float valueZ = generateRandom(zLowerBound, zUpperBound);
             gameObject0.transform.position = new Vector3(lampOriginalPosition.x + valueX, lampOriginalPosition.y, lampOriginalPosition.z + valueZ);
             firstTimeGameOn = false;
         }
@@ -150,6 +166,8 @@ namespace GoogleARCore.Examples.ObjectManipulation
         }*/
         public void Start()
         {
+            FirstPersonCamera = Camera.main;
+            Debug.Log("main camera: " + FirstPersonCamera);
             controller = GameObject.Find("Controller").GetComponent<AugmentedImageController>();
             clickCount = 0;
         }
