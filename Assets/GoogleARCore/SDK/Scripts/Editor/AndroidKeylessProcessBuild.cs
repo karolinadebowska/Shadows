@@ -83,8 +83,7 @@ namespace GoogleARCoreInternal
 
         private static bool IsKeylessAuthenticationEnabled()
         {
-            return ARCoreProjectSettings.Instance.AndroidAuthenticationStrategySetting ==
-                AndroidAuthenticationStrategy.Keyless;
+            return ARCoreProjectSettings.Instance.AndroidAuthenticationStrategySetting == AndroidAuthenticationStrategy.Keyless;
         }
     }
 }

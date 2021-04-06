@@ -20,12 +20,14 @@
 
 namespace GoogleARCore.Examples.AugmentedImage
 {
-    using System.Collections;
+    //using System.Collections;
     using System.Collections.Generic;
+    using System.Linq;
     using GoogleARCore;
     using GoogleARCore.Examples.ObjectManipulation;
     using UnityEngine;
     using UnityEngine.UI;
+    using System;
 
     /// <summary>
     /// Controller for AugmentedImage example.
@@ -46,6 +48,18 @@ namespace GoogleARCore.Examples.AugmentedImage
         /// </summary>
         public AugmentedImageVisualizer AugmentedImageVisualizerPrefab;
         public Text amPm;
+        public static bool _quizMode = false;
+        public Text buttonValue1;
+        public Text buttonValue2;
+        public Text buttonValue3;
+        public Text buttonValue4;
+        public bool QuizMode
+        {
+            get
+            { return _quizMode; }
+            set
+            { _quizMode = value; }
+        }
         /// <summary>
         /// The overlay containing the fit to scan user guide.
         /// </summary>
@@ -54,8 +68,10 @@ namespace GoogleARCore.Examples.AugmentedImage
         public GameObject LoadingDemo2;
         public GameObject QuestionDemo2;
         public GameObject Demo2Success;
+        public GameObject Quiz;
         //public GameObject mainSlider;
         public PawnManipulator manipulator;
+        public SunMovement sunMovement;
 
         public CanvasGroup canvasGroupDemo1, canvasGroupDemo2;
         public AugmentedImageVisualizer visualizer = null;
@@ -95,6 +111,7 @@ namespace GoogleARCore.Examples.AugmentedImage
         public void Awake()
         {
             LoadingDemo1.SetActive(false);
+            Quiz.SetActive(false);
             LoadingDemo2.SetActive(false);
             QuestionDemo2.SetActive(false);
             Demo2Success.SetActive(false);
@@ -118,19 +135,11 @@ namespace GoogleARCore.Examples.AugmentedImage
                 manipulator.disableObjects();
             }
         }
-        
-    IEnumerator waiter(float s)
-    {
-        //Print the time of when the function is first called.
-        Debug.Log("Started Coroutine at timestamp : " + Time.time);
-
-        //yield on a new YieldInstruction that waits for 5 seconds.
-        yield return new WaitForSeconds(5);
-
-        //After we have waited 5 seconds print the time again.
-        Debug.Log("Finished Coroutine at timestamp : " + Time.time);
+        public void Hide()
+        {
+            LoadingDemo2.SetActive(false);
         }
-    private void displayControl() {
+        private void displayControl() {
             foreach (var visualizer in _visualizers.Values)
             {
                 if (visualizer.Image.TrackingMethod == AugmentedImageTrackingMethod.FullTracking)
@@ -150,29 +159,32 @@ namespace GoogleARCore.Examples.AugmentedImage
                     }
                     else if (visualizer.Image.Name.Equals("demo2"))
                     {
+                        Quiz.SetActive(false);
                         Demo2 = true;
                         manipulator.enableObjects();
                         HideUI(canvasGroupDemo1);
                         LoadingOverlay.SetActive(false);
                         if (!clicked2)
+                        {
                             LoadingDemo2.SetActive(true);
+                        }
                         else
                             ShowUI(canvasGroupDemo2);
-                        //enable landscape mode
-                        Screen.autorotateToLandscapeRight = true;
-                        Screen.autorotateToLandscapeLeft = true;
+                        //disable landscape mode
+                        Screen.autorotateToLandscapeRight = false;
+                        Screen.autorotateToLandscapeLeft = false;
                         if (manipulator.GameMode)
                         {
                             //the first time user launches the game
                             if (!readyToPlayDemo2)
                             {
                                 QuestionDemo2.SetActive(true);
+                                HideUI(canvasGroupDemo2);
                                 Camera.main.cullingMask = ~(1 << 9);
                             }
                             else if (manipulator.GameWon){
                                 Camera.main.cullingMask = -1;
-                                StartCoroutine(waiter(2));
-                                //podmien overlay
+                                HideUI(canvasGroupDemo2);
                                 Demo2Success.SetActive(true);
                             }
                         }
@@ -252,19 +264,95 @@ namespace GoogleARCore.Examples.AugmentedImage
         public void wantToPlay()
         {
             QuestionDemo2.SetActive(false);
+            ShowUI(canvasGroupDemo2);
             readyToPlayDemo2 = true;
+            manipulator.GameWon = false;
         }
         public void playAgainDemo2() {
             Camera.main.cullingMask = ~(1 << 9);
             Demo2Success.SetActive(false);
             manipulator.GameWon = false;
+            clicked2 = true;
+            manipulator.turnGameMode();
         }
         public void endGameDemo2()
         {
             manipulator.GameMode = false;
             manipulator.GameWon = false;
+            ShowUI(canvasGroupDemo2);
             Demo2Success.SetActive(false);
             readyToPlayDemo2 = false;
+        }
+
+        //QUIZ
+        //Function to get a random number 
+        private static readonly System.Random random = new System.Random();
+        private static readonly object syncLock = new object();
+        public static int generateRandom(int min, int max)
+        {
+            lock (syncLock)
+            {
+                return random.Next(min, max);
+            }
+        }
+
+        public string getTimeFromValue(int value) {
+            string answer;
+            if (value > 6)
+                answer = value - 6 + "PM";
+            else if (value == 6)
+                answer = value + 6 + "PM";
+            else
+                answer = (value + 6) + "AM";
+            return answer;
+        }
+
+        public void SetValue(Text buttonValue, int value)
+        {
+            buttonValue.text = getTimeFromValue(value);
+        }
+        public string correctVal;
+        public void turnQuizMode() {
+            QuizMode = true;
+            HideUI(canvasGroupDemo1);
+            Quiz.SetActive(true);
+            int val = sunMovement.randomPosition(generateRandom(0,12));
+            Debug.Log("random in controller " + val);
+            correctVal = getTimeFromValue(val);
+            sunMovement.randomPosition(val);
+            HashSet<int> numbers = new HashSet<int>();
+            numbers.Add(val);
+            while (numbers.Count != 4)
+            {
+                numbers.Add(generateRandom(0,12));
+            }
+            List<int> hList = numbers.ToList();
+            // Console.WriteLine(String.Join(",", numbers));
+
+            var shuffled = hList.OrderBy(x => Guid.NewGuid()).ToList();
+            Console.WriteLine(String.Join(",", shuffled));
+            SetValue(buttonValue1, shuffled[0]);
+            SetValue(buttonValue2, shuffled[1]);
+            SetValue(buttonValue3, shuffled[2]);
+            SetValue(buttonValue4, shuffled[3]);
+        }
+        private ColorBlock theColor;
+        public void OnClicked(Button button)
+        {
+            Text aButton = button.GetComponentInChildren<Text>();
+            Debug.Log("text: " + aButton.text+" string: ");
+            int pressedVal = Int32.Parse(aButton.text.Substring(0, aButton.text.Length - 2));
+            int correct = Int32.Parse(correctVal.Substring(0, correctVal.Length - 2));
+            Debug.Log("correct: " + correctVal + " pressed: " + pressedVal);
+            if (correct == pressedVal)
+            {
+                button.image.color = Color.green;
+
+            }
+            else {
+                button.image.color = Color.red;
+
+            }
         }
     }
 }

@@ -762,8 +762,11 @@ PlayerSettings:
       daydreamIconForeground: {fileID: 0}
       daydreamIconBackground: {fileID: 0}
   cloudServicesEnabled:
-    Collab: 1
-    UNet: 1
+    Build: 0
+    Collab: 0
+    ErrorHub: 0
+    Hub: 0
+    UNet: 0
   luminIcon:
     m_Name: 
     m_ModelFolderPath: 
@@ -776,10 +779,10 @@ PlayerSettings:
     m_VersionCode: 1
     m_VersionName: 
   apiCompatibilityLevel: 6
-  cloudProjectId: 2098a630-da1a-437c-a64b-5d50df1235dc
+  cloudProjectId: 
   framebufferDepthMemorylessMode: 0
-  projectName: ARShadows
-  organizationId: karolinabdebowska
+  projectName: 
+  organizationId: 
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0

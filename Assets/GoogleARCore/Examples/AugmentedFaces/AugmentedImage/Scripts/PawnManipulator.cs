@@ -62,6 +62,10 @@ namespace GoogleARCore.Examples.ObjectManipulation
         private AugmentedImage image;
         private static GameObject gameObject0;
         private static GameObject gameObject1;
+        private static GameObject manipulator0;
+        private static GameObject manipulator1;
+        private static Anchor anchor0;
+        private static Anchor anchor1;
         private Vector3 lampOriginalPosition;
         public bool firstTimeGameOn = true;
         /// <summary>
@@ -93,10 +97,7 @@ namespace GoogleARCore.Examples.ObjectManipulation
                         // Check if what is hit is the desired object
                         if (hitobject.transform.tag == "lamp")
                         {
-                            // User clicked the object.. Do something here..
-                            Debug.Log("hurra");
                             GameWon = true;
-                           //return false;
                         }
                     }
                 }
@@ -117,14 +118,16 @@ namespace GoogleARCore.Examples.ObjectManipulation
         }
         private float xUpperBound, xLowerBound;
         private float zUpperBound, zLowerBound;
-        public void turnGameMode() {
+        public void turnGameMode()
+        {
             GameMode = true;
             Debug.Log("camera: " + FirstPersonCamera);
             //FirstPersonCamera.cullingMask = ~(1 << 9);
             Debug.Log("lamp original position: " + lampOriginalPosition + " " + gameObject0.transform.position + " " + gameObject0.transform.localPosition);
             //z max 0.2f, min -0.1f, x max: 0.1f, min: -0.04
 
-            if (firstTimeGameOn) {
+            if (firstTimeGameOn)
+            {
                 lampOriginalPosition = gameObject0.transform.position;
                 xUpperBound = lampOriginalPosition.x + 0.3f;
                 xLowerBound = lampOriginalPosition.x - 0.05f;
@@ -132,7 +135,7 @@ namespace GoogleARCore.Examples.ObjectManipulation
                 zLowerBound = lampOriginalPosition.z - 0.3f;
             }
             //disable movement
-           //gameObject0.transform.parent = null;
+            //gameObject0.transform.parent = null;
             float valueX = generateRandom(xLowerBound, xUpperBound);
             float valueZ = generateRandom(zLowerBound, zUpperBound);
             Debug.Log(new Vector3(lampOriginalPosition.x + valueX, lampOriginalPosition.y, lampOriginalPosition.z + valueZ));
@@ -142,29 +145,38 @@ namespace GoogleARCore.Examples.ObjectManipulation
                 Vector3 rotationVector = new Vector3(-90, 180, 0);
                 gameObject0.transform.rotation = Quaternion.Euler(rotationVector);
             }
-            else {
+            else
+            {
                 gameObject0.transform.rotation = new Quaternion(-0.707f, 0f, 0f, 0.707f);
             }
-            gameObject0.transform.position = new Vector3(lampOriginalPosition.x + valueX, lampOriginalPosition.y, lampOriginalPosition.z + valueZ);
+            //gameObject0.transform.position = new Vector3(lampOriginalPosition.x + valueX, lampOriginalPosition.y, lampOriginalPosition.z + valueZ);
+            //manipulator0.transform.position = new Vector3(lampOriginalPosition.x + valueX, lampOriginalPosition.y, lampOriginalPosition.z + valueZ);
+            // gameObject0.transform.parent = manipulator0.transform;
+            //anchor0.transform.position = new Vector3(lampOriginalPosition.x + valueX, lampOriginalPosition.y, lampOriginalPosition.z + valueZ);
+            // manipulator0.transform.parent = anchor0.transform;
             firstTimeGameOn = false;
+            manipulator0.transform.position = new Vector3(lampOriginalPosition.x + valueX, lampOriginalPosition.y, lampOriginalPosition.z + valueZ);
         }
+              //  position = new Vector3(lampOriginalPosition.x + valueX, lampOriginalPosition.y, lampOriginalPosition.z + valueZ);
 
-/*      
-        public void Initialize()
-        {
-            Debug.Log("awake in pawn");
-            if (GameObject.FindGameObjectWithTag("lamp"))
-            {
-                lamp = (GameObject)FindObjectOfType(typeof(GameObject));
-                Debug.Log("lamp " + lamp);
-            }
-           // if (GameObject.FindGameObjectWithTag("puzzle"))
-           // {
-               // puzzle = (GameObject)FindObjectOfType(typeof(GameObject));
-               // Debug.Log("puzzle " + puzzle);
-           // }
-        }*/
-        public void Start()
+           // anchor0.transform.position = new Vector3(lampOriginalPosition.x + valueX, lampOriginalPosition.y, lampOriginalPosition.z + valueZ);
+
+            /*      
+                    public void Initialize()
+                    {
+                        Debug.Log("awake in pawn");
+                        if (GameObject.FindGameObjectWithTag("lamp"))
+                        {
+                            lamp = (GameObject)FindObjectOfType(typeof(GameObject));
+                            Debug.Log("lamp " + lamp);
+                        }
+                       // if (GameObject.FindGameObjectWithTag("puzzle"))
+                       // {
+                           // puzzle = (GameObject)FindObjectOfType(typeof(GameObject));
+                           // Debug.Log("puzzle " + puzzle);
+                       // }
+                    }*/
+            public void Start()
         {
             FirstPersonCamera = Camera.main;
             Debug.Log("main camera: " + FirstPersonCamera);
@@ -216,14 +228,14 @@ namespace GoogleARCore.Examples.ObjectManipulation
                 gameObject0 = Instantiate(PawnPrefab[0], new Vector3(pose.position.x - 0.055f, pose.position.y, pose.position.z - 0.03f), new Quaternion(-0.707f, 0f, 0f, 0.707f));
                 gameObject1 = Instantiate(PawnPrefab[1], new Vector3(pose.position.x, pose.position.y, pose.position.z - 0.03f), new Quaternion(0f, 1f, 0f, 0f));
                 // Instantiate manipulators
-                var manipulator0 = Instantiate(ManipulatorPrefab, new Vector3(pose.position.x - 0.055f, pose.position.y, pose.position.z - 0.03f), pose.rotation);
-                var manipulator1 = Instantiate(ManipulatorPrefab, new Vector3(pose.position.x, pose.position.y, pose.position.z - 0.03f), pose.rotation);
+                manipulator0 = Instantiate(ManipulatorPrefab, new Vector3(pose.position.x - 0.055f, pose.position.y, pose.position.z - 0.03f), pose.rotation);
+                manipulator1 = Instantiate(ManipulatorPrefab, new Vector3(pose.position.x, pose.position.y, pose.position.z - 0.03f), pose.rotation);
                 // Make game object a child of the manipulator.
                 gameObject0.transform.parent = manipulator0.transform;
                 gameObject1.transform.parent = manipulator1.transform;
                 // Create an anchor to allow ARCore to track the image
-                var anchor0 = image.CreateAnchor(new Pose(new Vector3(pose.position.x - 0.055f, pose.position.y, pose.position.z - 0.03f), pose.rotation));
-                var anchor1 = image.CreateAnchor(new Pose(new Vector3(pose.position.x, pose.position.y, pose.position.z - 0.03f), pose.rotation));
+                anchor0 = image.CreateAnchor(new Pose(new Vector3(pose.position.x - 0.055f, pose.position.y, pose.position.z - 0.03f), pose.rotation));
+                anchor1 = image.CreateAnchor(new Pose(new Vector3(pose.position.x, pose.position.y, pose.position.z - 0.03f), pose.rotation));
                 // Make manipulator a child of the anchor.
                 manipulator0.transform.parent = anchor0.transform;
                 manipulator1.transform.parent = anchor1.transform;

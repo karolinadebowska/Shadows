@@ -90,7 +90,7 @@ public class SunMovement : MonoBehaviour
         }
         StopTime = mainSlider.Value * numHours;
         TimeOfDay = mainSlider.Value * numHours;
-        Debug.Log("stop time is" + StopTime+" value from slider "+ mainSlider.Value * numHours);
+       // Debug.Log("stop time is" + StopTime+" value from slider "+ mainSlider.Value * numHours);
         count = count + 1;
     }
     private void DrawLine(Vector3 start, Vector3 end)
@@ -133,7 +133,15 @@ public class SunMovement : MonoBehaviour
         //start from the last position
         TimeOfDay = StopTime;
         StopTime = value/ 30;
-        Debug.Log("value of a clock has been changed");
+       // Debug.Log("value of a clock has been changed");
+    }
+
+    public int randomPosition(int random) {
+        TimeOfDay = random;
+        StopTime = random;
+        Debug.Log("random "+ random);
+        Update();
+        return random;
     }
 
     public void onClick() {
@@ -143,7 +151,7 @@ public class SunMovement : MonoBehaviour
     void Update()
     {
        // Debug.Log("position: " + sun.transform.position);
-            //Debug.Log("stopTime in update: " + StopTime+" timeOfDay: "+TimeOfDay+ " Math.Floor((double)timeOfDay): "+ Math.Floor((double)TimeOfDay));
+           // Debug.Log("stopTime in update: " + StopTime+" timeOfDay: "+TimeOfDay);
             if (Math.Floor((double)TimeOfDay) == Math.Floor((double)StopTime))
             {
                 SunUpdate();
