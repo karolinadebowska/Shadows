@@ -64,10 +64,13 @@ namespace GoogleARCore.Examples.AugmentedImage
         /// The overlay containing the fit to scan user guide.
         /// </summary>
         public GameObject LoadingOverlay;
+        public GameObject DuringGameDemo2;
         public GameObject LoadingDemo1;
         public GameObject LoadingDemo2;
         public GameObject QuestionDemo2;
         public GameObject Demo2Success;
+        public GameObject Demo1Success;
+        public GameObject Demo1Failure;
         public GameObject Quiz;
         //public GameObject mainSlider;
         public PawnManipulator manipulator;
@@ -111,16 +114,19 @@ namespace GoogleARCore.Examples.AugmentedImage
         public void Awake()
         {
             LoadingDemo1.SetActive(false);
+            DuringGameDemo2.SetActive(false);
             Quiz.SetActive(false);
             LoadingDemo2.SetActive(false);
             QuestionDemo2.SetActive(false);
             Demo2Success.SetActive(false);
-      
+            Demo1Success.SetActive(false);
+            Demo1Failure.SetActive(false);
+            HideUI(canvasGroupDemo1);
+            HideUI(canvasGroupDemo2);
+
             // Enable ARCore to target 60fps camera capture frame rate on supported devices.
             // Note, Application.targetFrameRate is ignored when QualitySettings.vSyncCount != 0.
             Application.targetFrameRate = 60;
-            HideUI(canvasGroupDemo1);
-            HideUI(canvasGroupDemo2);
         }
         private void switchDemos(AugmentedImage image) {
             if (Demo2 && image.Name.Equals("demo1"))
@@ -131,7 +137,6 @@ namespace GoogleARCore.Examples.AugmentedImage
             }
             else if (!Demo2 && image.Name.Equals("demo2"))
             {
-                //Debug.Log("calling disableObjects");
                 manipulator.disableObjects();
             }
         }
@@ -168,23 +173,22 @@ namespace GoogleARCore.Examples.AugmentedImage
                         {
                             LoadingDemo2.SetActive(true);
                         }
-                        else
-                            ShowUI(canvasGroupDemo2);
                         //disable landscape mode
                         Screen.autorotateToLandscapeRight = false;
                         Screen.autorotateToLandscapeLeft = false;
+
                         if (manipulator.GameMode)
                         {
                             //the first time user launches the game
                             if (!readyToPlayDemo2)
                             {
-                                QuestionDemo2.SetActive(true);
                                 HideUI(canvasGroupDemo2);
                                 Camera.main.cullingMask = ~(1 << 9);
+                                QuestionDemo2.SetActive(true);
                             }
                             else if (manipulator.GameWon){
                                 Camera.main.cullingMask = -1;
-                                HideUI(canvasGroupDemo2);
+                                DuringGameDemo2.SetActive(false);
                                 Demo2Success.SetActive(true);
                             }
                         }
@@ -244,7 +248,6 @@ namespace GoogleARCore.Examples.AugmentedImage
                     GameObject.Destroy(visualizer.gameObject);
                 }
             }
-            // Show the fit-to-scan overlay if there are no images that are being tracked
             displayControl();
         }
 
@@ -260,11 +263,13 @@ namespace GoogleARCore.Examples.AugmentedImage
         {
             LoadingDemo2.SetActive(false);
             clicked2 = true;
+            ShowUI(canvasGroupDemo2);
         }
         public void wantToPlay()
         {
             QuestionDemo2.SetActive(false);
-            ShowUI(canvasGroupDemo2);
+            HideUI(canvasGroupDemo2);
+            DuringGameDemo2.SetActive(true);
             readyToPlayDemo2 = true;
             manipulator.GameWon = false;
         }
@@ -272,11 +277,14 @@ namespace GoogleARCore.Examples.AugmentedImage
             Camera.main.cullingMask = ~(1 << 9);
             Demo2Success.SetActive(false);
             manipulator.GameWon = false;
+            DuringGameDemo2.SetActive(true);
             clicked2 = true;
             manipulator.turnGameMode();
         }
         public void endGameDemo2()
         {
+            Camera.main.cullingMask = -1;
+            DuringGameDemo2.SetActive(false);
             manipulator.GameMode = false;
             manipulator.GameWon = false;
             ShowUI(canvasGroupDemo2);
@@ -312,7 +320,9 @@ namespace GoogleARCore.Examples.AugmentedImage
             buttonValue.text = getTimeFromValue(value);
         }
         public string correctVal;
+        [HideInInspector]
         public void turnQuizMode() {
+            Demo1Success.SetActive(false);
             QuizMode = true;
             HideUI(canvasGroupDemo1);
             Quiz.SetActive(true);
@@ -346,13 +356,35 @@ namespace GoogleARCore.Examples.AugmentedImage
             Debug.Log("correct: " + correctVal + " pressed: " + pressedVal);
             if (correct == pressedVal)
             {
-                button.image.color = Color.green;
+                //button.image.color = Color.green;
+                Demo1Success.SetActive(true);
+                Quiz.SetActive(false);
 
             }
             else {
-                button.image.color = Color.red;
-
+                Demo1Failure.SetActive(true);
             }
+        }
+        public void EndQuiz() {
+            Demo1Success.SetActive(false);
+            QuizMode = false;
+            ShowUI(canvasGroupDemo1);
+        }
+        public void CloseFailure()
+        {
+            Demo1Failure.SetActive(false);
+        }
+        public void CloseQuiz()
+        {
+            QuizMode = false;
+            Demo1Success.SetActive(false);
+            Quiz.SetActive(false);
+            ShowUI(canvasGroupDemo1);
+        }
+        public void QuizAgain()
+        {
+            Quiz.SetActive(true);
+            turnQuizMode();
         }
     }
 }

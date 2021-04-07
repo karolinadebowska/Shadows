@@ -121,11 +121,8 @@ namespace GoogleARCore.Examples.ObjectManipulation
         public void turnGameMode()
         {
             GameMode = true;
-            Debug.Log("camera: " + FirstPersonCamera);
-            //FirstPersonCamera.cullingMask = ~(1 << 9);
-            Debug.Log("lamp original position: " + lampOriginalPosition + " " + gameObject0.transform.position + " " + gameObject0.transform.localPosition);
-            //z max 0.2f, min -0.1f, x max: 0.1f, min: -0.04
-
+            //Debug.Log("camera: " + FirstPersonCamera);
+            //Debug.Log("lamp original position: " + lampOriginalPosition + " " + gameObject0.transform.position + " " + gameObject0.transform.localPosition);
             if (firstTimeGameOn)
             {
                 lampOriginalPosition = gameObject0.transform.position;
@@ -134,8 +131,6 @@ namespace GoogleARCore.Examples.ObjectManipulation
                 zUpperBound = lampOriginalPosition.z + 0.1f;
                 zLowerBound = lampOriginalPosition.z - 0.3f;
             }
-            //disable movement
-            //gameObject0.transform.parent = null;
             float valueX = generateRandom(xLowerBound, xUpperBound);
             float valueZ = generateRandom(zLowerBound, zUpperBound);
             Debug.Log(new Vector3(lampOriginalPosition.x + valueX, lampOriginalPosition.y, lampOriginalPosition.z + valueZ));
@@ -149,18 +144,9 @@ namespace GoogleARCore.Examples.ObjectManipulation
             {
                 gameObject0.transform.rotation = new Quaternion(-0.707f, 0f, 0f, 0.707f);
             }
-            //gameObject0.transform.position = new Vector3(lampOriginalPosition.x + valueX, lampOriginalPosition.y, lampOriginalPosition.z + valueZ);
-            //manipulator0.transform.position = new Vector3(lampOriginalPosition.x + valueX, lampOriginalPosition.y, lampOriginalPosition.z + valueZ);
-            // gameObject0.transform.parent = manipulator0.transform;
-            //anchor0.transform.position = new Vector3(lampOriginalPosition.x + valueX, lampOriginalPosition.y, lampOriginalPosition.z + valueZ);
-            // manipulator0.transform.parent = anchor0.transform;
             firstTimeGameOn = false;
             manipulator0.transform.position = new Vector3(lampOriginalPosition.x + valueX, lampOriginalPosition.y, lampOriginalPosition.z + valueZ);
         }
-              //  position = new Vector3(lampOriginalPosition.x + valueX, lampOriginalPosition.y, lampOriginalPosition.z + valueZ);
-
-           // anchor0.transform.position = new Vector3(lampOriginalPosition.x + valueX, lampOriginalPosition.y, lampOriginalPosition.z + valueZ);
-
             /*      
                     public void Initialize()
                     {
