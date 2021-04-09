@@ -71,6 +71,8 @@ namespace GoogleARCore.Examples.AugmentedImage
         public GameObject Demo2Success;
         public GameObject Demo1Success;
         public GameObject Demo1Failure;
+        public GameObject StartScreen;
+        public GameObject AboutScreen;
         public GameObject Quiz;
         //public GameObject mainSlider;
         public PawnManipulator manipulator;
@@ -113,6 +115,7 @@ namespace GoogleARCore.Examples.AugmentedImage
         /// </summary>
         public void Awake()
         {
+            StartScreen.SetActive(true);
             LoadingDemo1.SetActive(false);
             DuringGameDemo2.SetActive(false);
             Quiz.SetActive(false);
@@ -121,6 +124,7 @@ namespace GoogleARCore.Examples.AugmentedImage
             Demo2Success.SetActive(false);
             Demo1Success.SetActive(false);
             Demo1Failure.SetActive(false);
+            AboutScreen.SetActive(false);
             HideUI(canvasGroupDemo1);
             HideUI(canvasGroupDemo2);
 
@@ -390,6 +394,21 @@ namespace GoogleARCore.Examples.AugmentedImage
         {
             Quiz.SetActive(true);
             turnQuizMode();
+        }
+        public void doExitGame()
+        {
+            Application.Quit();
+        }
+        public void startPressed() {
+            StartScreen.SetActive(false);
+        }
+        public void aboutPressed()
+        {
+            AboutScreen.SetActive(true);
+        }
+        public void HideAbout()
+        {
+            AboutScreen.SetActive(false);
         }
     }
 }
