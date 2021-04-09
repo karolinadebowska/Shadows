@@ -67,6 +67,7 @@ namespace GoogleARCore.Examples.ObjectManipulation
         private static Anchor anchor0;
         private static Anchor anchor1;
         private Vector3 lampOriginalPosition;
+        private Vector3 puzzleOriginalPosition;
         public bool firstTimeGameOn = true;
         /// <summary>
         /// Manipulator prefab to attach placed objects to.
@@ -85,7 +86,7 @@ namespace GoogleARCore.Examples.ObjectManipulation
                 if (gesture.TargetObject == null)
                 {
                     //Initialize();
-                    Debug.Log("can start manipulation");
+                    //Debug.Log("can start manipulation");
                 }
                 else if (GameMode && gesture.TargetObject != null)
                 {
@@ -93,7 +94,7 @@ namespace GoogleARCore.Examples.ObjectManipulation
                     Ray ray = FirstPersonCamera.ScreenPointToRay(Input.GetTouch(0).position);
                     if (Physics.Raycast(ray, out hitobject)) { 
 
-                        Debug.Log(hitobject.transform.name+ " "+ hitobject.transform.tag);
+                        //Debug.Log(hitobject.transform.name+ " "+ hitobject.transform.tag);
                         // Check if what is hit is the desired object
                         if (hitobject.transform.tag == "lamp")
                         {
@@ -126,6 +127,7 @@ namespace GoogleARCore.Examples.ObjectManipulation
             if (firstTimeGameOn)
             {
                 lampOriginalPosition = gameObject0.transform.position;
+                puzzleOriginalPosition = gameObject1.transform.position;
                 xUpperBound = lampOriginalPosition.x + 0.3f;
                 xLowerBound = lampOriginalPosition.x - 0.05f;
                 zUpperBound = lampOriginalPosition.z + 0.1f;
@@ -133,10 +135,10 @@ namespace GoogleARCore.Examples.ObjectManipulation
             }
             float valueX = generateRandom(xLowerBound, xUpperBound);
             float valueZ = generateRandom(zLowerBound, zUpperBound);
-            Debug.Log(new Vector3(lampOriginalPosition.x + valueX, lampOriginalPosition.y, lampOriginalPosition.z + valueZ));
+            //Debug.Log(new Vector3(lampOriginalPosition.x + valueX, lampOriginalPosition.y, lampOriginalPosition.z + valueZ));
             if (Math.Abs(valueX - xLowerBound) > Math.Abs(valueX - zUpperBound))
             {
-                Debug.Log("rotation " + gameObject0.transform.rotation);
+                //Debug.Log("rotation " + gameObject0.transform.rotation);
                 Vector3 rotationVector = new Vector3(-90, 180, 0);
                 gameObject0.transform.rotation = Quaternion.Euler(rotationVector);
             }
@@ -146,6 +148,7 @@ namespace GoogleARCore.Examples.ObjectManipulation
             }
             firstTimeGameOn = false;
             manipulator0.transform.position = new Vector3(lampOriginalPosition.x + valueX, lampOriginalPosition.y, lampOriginalPosition.z + valueZ);
+            controller.displayControl();
         }
             /*      
                     public void Initialize()
@@ -165,9 +168,14 @@ namespace GoogleARCore.Examples.ObjectManipulation
             public void Start()
         {
             FirstPersonCamera = Camera.main;
-            Debug.Log("main camera: " + FirstPersonCamera);
-            controller = GameObject.Find("Controller").GetComponent<AugmentedImageController>();
+            //Debug.Log("main camera: " + FirstPersonCamera);
+            //controller = GameObject.FindGameObjectsWithTag("GameController").GetComponent<AugmentedImageController>();
             clickCount = 0;
+        }
+        public void resetPositions() {
+            manipulator0.transform.position = new Vector3(lampOriginalPosition.x, lampOriginalPosition.y, lampOriginalPosition.z);
+            gameObject0.transform.rotation = new Quaternion(-0.707f, 0f, 0f, 0.707f);
+            manipulator1.transform.position = new Vector3(puzzleOriginalPosition.x, puzzleOriginalPosition.y, puzzleOriginalPosition.z);
         }
         public void disableObjects() {
             if (gameObject0.activeSelf)

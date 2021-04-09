@@ -30,7 +30,7 @@ public class SunMovement : MonoBehaviour
     public static RadialSlider mainSlider;
     public static GameObject cat;
     [HideInInspector]
-    private float yValue, zValue, xValue;
+    private float yValue, zValue;
 
     public static bool _drawLines = false;
     public static bool DrawLines
@@ -117,7 +117,6 @@ public class SunMovement : MonoBehaviour
         //get the initial position of the sun; in AR there are different values each time 
         if (countStart == 0)
         {
-            xValue = sun.transform.position.x;
             yValue = sun.transform.position.y;
             zValue = sun.transform.position.z;
         }
@@ -128,20 +127,18 @@ public class SunMovement : MonoBehaviour
 
         countStart = countStart + 1;
     }
-
     public void ValueChanged(int value) {
         //start from the last position
         TimeOfDay = StopTime;
         StopTime = value/ 30;
-       // Debug.Log("value of a clock has been changed");
     }
 
-    public int randomPosition(int random) {
+    public void randomPosition(int random) {
+        mainSlider.RadialImage.fillAmount = (float)random/12;
+        Debug.Log(mainSlider.RadialImage.fillAmount);
         TimeOfDay = random;
         StopTime = random;
-        Debug.Log("random "+ random);
         Update();
-        return random;
     }
 
     public void onClick() {
@@ -176,11 +173,12 @@ public class SunMovement : MonoBehaviour
 
     public void SunUpdate()
     {
+        Debug.Log("sun: " + sun + "TimeOfDay: " + TimeOfDay + "degr: " + degr + "numHours: " + numHours);
         sun.transform.localRotation = Quaternion.Euler((((TimeOfDay / numHours) * degr))/2 - 90, 90, 0);
         sun.transform.localPosition = new Vector3((TimeOfDay / numHours * 0.4f)-0.1f, 0.4f/2 * (float)Math.Sin((float)((TimeOfDay / numHours) * radians)), 0.1f);
         if (DrawLines)
         {
-            Debug.Log("drawing");
+            //Debug.Log("drawing");
             //vertical
             DrawLine(new Vector3(sun.transform.position.x, yValue, zValue), sun.transform.position);
             //cat - sun

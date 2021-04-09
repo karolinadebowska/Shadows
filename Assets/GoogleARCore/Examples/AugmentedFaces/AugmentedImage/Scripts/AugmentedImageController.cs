@@ -134,17 +134,21 @@ namespace GoogleARCore.Examples.AugmentedImage
                 //remove the object
                 _visualizers.Remove(image.DatabaseIndex);
                 GameObject.Destroy(visualizer.gameObject);
+                //interupt a game
+                QuizMode = false;
             }
             else if (!Demo2 && image.Name.Equals("demo2"))
             {
                 manipulator.disableObjects();
+                //interupt a game
+                manipulator.GameMode = false;
             }
         }
         public void Hide()
         {
             LoadingDemo2.SetActive(false);
         }
-        private void displayControl() {
+        public void displayControl() {
             foreach (var visualizer in _visualizers.Values)
             {
                 if (visualizer.Image.TrackingMethod == AugmentedImageTrackingMethod.FullTracking)
@@ -155,11 +159,11 @@ namespace GoogleARCore.Examples.AugmentedImage
                         LoadingOverlay.SetActive(false);
                         HideUI(canvasGroupDemo2);
                         //disable landscape mode
-                        Screen.autorotateToLandscapeRight = false;
-                        Screen.autorotateToLandscapeLeft = false;
+                       // Screen.autorotateToLandscapeRight = false;
+                        //Screen.autorotateToLandscapeLeft = false;
                         if (!clicked1)
                             LoadingDemo1.SetActive(true);
-                        else
+                        else if (clicked1 && !QuizMode)
                             ShowUI(canvasGroupDemo1);
                     }
                     else if (visualizer.Image.Name.Equals("demo2"))
@@ -173,10 +177,13 @@ namespace GoogleARCore.Examples.AugmentedImage
                         {
                             LoadingDemo2.SetActive(true);
                         }
+                        else if (clicked2 && !manipulator.GameMode)
+                            ShowUI(canvasGroupDemo2);
+                        else if (clicked2 && manipulator.GameMode)
+                            HideUI(canvasGroupDemo2);
                         //disable landscape mode
-                        Screen.autorotateToLandscapeRight = false;
-                        Screen.autorotateToLandscapeLeft = false;
-
+                       // Screen.autorotateToLandscapeRight = false;
+                       // Screen.autorotateToLandscapeLeft = false;
                         if (manipulator.GameMode)
                         {
                             //the first time user launches the game
@@ -290,6 +297,7 @@ namespace GoogleARCore.Examples.AugmentedImage
             ShowUI(canvasGroupDemo2);
             Demo2Success.SetActive(false);
             readyToPlayDemo2 = false;
+            manipulator.resetPositions();
         }
 
         //QUIZ
@@ -326,10 +334,10 @@ namespace GoogleARCore.Examples.AugmentedImage
             QuizMode = true;
             HideUI(canvasGroupDemo1);
             Quiz.SetActive(true);
-            int val = sunMovement.randomPosition(generateRandom(0,12));
-            Debug.Log("random in controller " + val);
-            correctVal = getTimeFromValue(val);
+            int val = generateRandom(0,12);
+            //Debug.Log("random in controller " + val);
             sunMovement.randomPosition(val);
+            correctVal = getTimeFromValue(val);
             HashSet<int> numbers = new HashSet<int>();
             numbers.Add(val);
             while (numbers.Count != 4)
@@ -346,20 +354,16 @@ namespace GoogleARCore.Examples.AugmentedImage
             SetValue(buttonValue3, shuffled[2]);
             SetValue(buttonValue4, shuffled[3]);
         }
-        private ColorBlock theColor;
         public void OnClicked(Button button)
         {
             Text aButton = button.GetComponentInChildren<Text>();
-            Debug.Log("text: " + aButton.text+" string: ");
             int pressedVal = Int32.Parse(aButton.text.Substring(0, aButton.text.Length - 2));
             int correct = Int32.Parse(correctVal.Substring(0, correctVal.Length - 2));
-            Debug.Log("correct: " + correctVal + " pressed: " + pressedVal);
             if (correct == pressedVal)
             {
                 //button.image.color = Color.green;
                 Demo1Success.SetActive(true);
                 Quiz.SetActive(false);
-
             }
             else {
                 Demo1Failure.SetActive(true);
@@ -380,6 +384,7 @@ namespace GoogleARCore.Examples.AugmentedImage
             Demo1Success.SetActive(false);
             Quiz.SetActive(false);
             ShowUI(canvasGroupDemo1);
+
         }
         public void QuizAgain()
         {
