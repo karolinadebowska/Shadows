@@ -66,6 +66,7 @@ namespace GoogleARCore.Examples.AugmentedImage
         public GameObject LoadingOverlay;
         public GameObject DuringGameDemo2;
         public GameObject LoadingDemo1;
+        public GameObject HomeButton;
         public GameObject LoadingDemo2;
         public GameObject QuestionDemo2;
         public GameObject Demo2Success;
@@ -109,12 +110,7 @@ namespace GoogleARCore.Examples.AugmentedImage
                 amPm.gameObject.SetActive(true);
             }
         }
-
-        /// <summary>
-        /// The Unity Awake() method.
-        /// </summary>
-        public void Awake()
-        {
+        public void disableLayers() {
             StartScreen.SetActive(true);
             LoadingDemo1.SetActive(false);
             DuringGameDemo2.SetActive(false);
@@ -127,6 +123,14 @@ namespace GoogleARCore.Examples.AugmentedImage
             AboutScreen.SetActive(false);
             HideUI(canvasGroupDemo1);
             HideUI(canvasGroupDemo2);
+            HomeButton.SetActive(false);
+        }
+        /// <summary>
+        /// The Unity Awake() method.
+        /// </summary>
+        public void Awake()
+        {
+            disableLayers();
 
             // Enable ARCore to target 60fps camera capture frame rate on supported devices.
             // Note, Application.targetFrameRate is ignored when QualitySettings.vSyncCount != 0.
@@ -401,6 +405,7 @@ namespace GoogleARCore.Examples.AugmentedImage
         }
         public void startPressed() {
             StartScreen.SetActive(false);
+            HomeButton.SetActive(true);
         }
         public void aboutPressed()
         {
@@ -409,6 +414,9 @@ namespace GoogleARCore.Examples.AugmentedImage
         public void HideAbout()
         {
             AboutScreen.SetActive(false);
+        }
+        public void homePressed() {
+            disableLayers();
         }
     }
 }
