@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/GoogleARCore/Examples/ObjectManipulation/Scenes/ObjectManipulation.unity
     guid: 9dba7e74f4d2b410f90b920f80528d44
   - enabled: 1
-    path: Assets/GoogleARCore/Examples/AugmentedFaces/AugmentedImage/Scenes/AugmentedImage.unity
+    path: Assets/GoogleARCore/App/MyApp/Scenes/AugmentedImage.unity
     guid: f63c89d66d8c0db46a9acb3d6cf790fd
   m_configObjects:
     com.unity.xr.arcore.PlayerSettings: {fileID: 11400000, guid: 0bec82c52c0fb854aac454677e208e3e,
