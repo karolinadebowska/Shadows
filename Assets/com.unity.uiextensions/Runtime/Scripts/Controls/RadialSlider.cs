@@ -12,6 +12,7 @@ namespace UnityEngine.UI.Extensions
     [RequireComponent(typeof(Image))]
     public class RadialSlider : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler, IPointerUpHandler
     {
+        public Image clockHandTransform;
         private bool isPointerDown, isPointerReleased, lerpInProgress;
         private Vector2 m_localPos;
         private float m_targetAngle, m_lerpTargetAngle, m_startAngle, m_currentLerpTime, m_lerpTime;
@@ -156,7 +157,6 @@ namespace UnityEngine.UI.Extensions
                     if (!LerpToTarget)
                     {
                         UpdateRadialImage(m_targetAngle);
-
                         NotifyValueChanged();
                     }
                     else
@@ -209,8 +209,10 @@ namespace UnityEngine.UI.Extensions
             return value;
         }
 
-        private void UpdateRadialImage(float targetAngle)
+        public void UpdateRadialImage(float targetAngle)
         {
+            Debug.Log("angle :" + targetAngle);
+            clockHandTransform.transform.rotation = Quaternion.Euler(0, 0, (-targetAngle * 360)+180);
             RadialImage.fillAmount = targetAngle;
 
             RadialImage.color = Color.Lerp(m_startColor, m_endColor, targetAngle);

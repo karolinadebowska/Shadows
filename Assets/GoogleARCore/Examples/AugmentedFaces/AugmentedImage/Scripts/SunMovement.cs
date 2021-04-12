@@ -134,8 +134,7 @@ public class SunMovement : MonoBehaviour
     }
 
     public void randomPosition(int random) {
-        mainSlider.RadialImage.fillAmount = (float)random/12;
-        Debug.Log(mainSlider.RadialImage.fillAmount);
+        mainSlider.UpdateRadialImage((float)random/12);
         TimeOfDay = random;
         StopTime = random;
         Update();

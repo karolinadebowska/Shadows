@@ -392,13 +392,13 @@ namespace GoogleARCore.Examples.AugmentedImage
             Demo1Success.SetActive(false);
             Quiz.SetActive(false);
             ShowUI(canvasGroupDemo1);
-
         }
         public void QuizAgain()
         {
             Quiz.SetActive(true);
             turnQuizMode();
         }
+        //MAIN MENU
         public void doExitGame()
         {
             Application.Quit();
