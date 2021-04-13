@@ -2306,7 +2306,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: EXIT
+  m_Text: QUIT
 --- !u!222 &322431401
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3322,7 +3322,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AspectMode: 0
-  m_AspectRatio: 0.5611814
+  m_AspectRatio: 0.56329113
 --- !u!1 &688705504
 GameObject:
   m_ObjectHideFlags: 0
@@ -3740,7 +3740,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AspectMode: 0
-  m_AspectRatio: 0.5611814
+  m_AspectRatio: 0.56329113
 --- !u!1 &770492240
 GameObject:
   m_ObjectHideFlags: 0
@@ -10539,7 +10539,7 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'HINT: Look at the sun that casts the shadow.
 
-    It it morning or afternoon?'
+    Is it morning or afternoon?'
 --- !u!222 &1990930138
 CanvasRenderer:
   m_ObjectHideFlags: 0
