@@ -20,11 +20,7 @@
 
 namespace GoogleARCore.Examples.AugmentedImage
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Runtime.InteropServices;
     using GoogleARCore;
-    using GoogleARCoreInternal;
     using UnityEngine;
 
     /// <summary>
@@ -46,10 +42,7 @@ namespace GoogleARCore.Examples.AugmentedImage
         {
             //this makes sure that position will be set only once
             if (counter == 0)
-            {
-               // Debug.Log("awake");
                 Models[1].transform.localPosition = new Vector3(-0.1f, 0.0f, 0.1f);
-            }
             counter = counter + 1;
         }
         /// <summary>
@@ -57,27 +50,16 @@ namespace GoogleARCore.Examples.AugmentedImage
         /// </summary>
         public void Start()
         {
-           // Debug.Log("start in a visualizer");
             float halfWidth = 0;
             float halfHeight = 0;
-            //SunMovement.setPosition();
             Models[0].SetActive(false);
             Models[1].SetActive(false);
-            //Models[2].SetActive(false);
-            //Models[3].SetActive(false);
             if (Image != null) {
                 halfWidth = Image.ExtentX / 2;
                 halfHeight = Image.ExtentZ / 2;
             }
             //cat
-            Models[0].transform.localPosition =
-                (halfWidth * Vector3.right) + (halfHeight * Vector3.back);
-            //Debug.Log("cat position: " + Models[0].transform.localPosition);
-            //Models[2].transform.localPosition =
-           // Models[2].transform.localPosition =
-            //    (halfWidth * Vector3.left) + (halfHeight * Vector3.back);
-           // Models[3].transform.localPosition =
-            //   (halfWidth * Vector3.right) + (halfHeight * Vector3.back);
+            Models[0].transform.localPosition = (halfWidth * Vector3.right) + (halfHeight * Vector3.back);
         }
 
         /// <summary>
@@ -89,8 +71,6 @@ namespace GoogleARCore.Examples.AugmentedImage
             {
                 Models[0].SetActive(false);
                 Models[1].SetActive(false);
-              //  Models[2].SetActive(false);
-              //  Models[3].SetActive(false);
                 return;
             }
             if (Image.Name == "demo2" && Image.TrackingState == TrackingState.Tracking)
@@ -104,9 +84,7 @@ namespace GoogleARCore.Examples.AugmentedImage
                 Models[1].SetActive(true);
             }
             else
-            {
                 return;
-            }
         }
     }
 }

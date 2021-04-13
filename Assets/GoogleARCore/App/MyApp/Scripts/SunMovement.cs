@@ -74,7 +74,6 @@ public class SunMovement : MonoBehaviour
 
     void Awake()
     {
-        Debug.Log("AWAKE IN SUN");
         if (GameObject.FindGameObjectWithTag("myRadialSlider"))
         {
             mainSlider = (RadialSlider)GameObject.FindObjectOfType(typeof(RadialSlider));
@@ -90,7 +89,6 @@ public class SunMovement : MonoBehaviour
         }
         StopTime = mainSlider.Value * numHours;
         TimeOfDay = mainSlider.Value * numHours;
-       // Debug.Log("stop time is" + StopTime+" value from slider "+ mainSlider.Value * numHours);
         count = count + 1;
     }
     private void DrawLine(Vector3 start, Vector3 end)
@@ -100,7 +98,6 @@ public class SunMovement : MonoBehaviour
         myLine.AddComponent<LineRenderer>();
         LineRenderer lr = myLine.GetComponent<LineRenderer>();
         lr.useWorldSpace = true;
-        
         lr.material = new Material(material);
         lr.startColor = Color.white;
         lr.endColor = Color.white;
@@ -144,41 +141,33 @@ public class SunMovement : MonoBehaviour
     public void onClick() {
         DrawLines =! DrawLines;
     }
-    // Update is called once per frame
+
     void Update()
     {
-       // Debug.Log("position: " + sun.transform.position);
-           // Debug.Log("stopTime in update: " + StopTime+" timeOfDay: "+TimeOfDay);
-            if (Math.Floor((double)TimeOfDay) == Math.Floor((double)StopTime))
+        if (Math.Floor((double)TimeOfDay) == Math.Floor((double)StopTime))
+        {
+            SunUpdate();
+            return;
+        }
+        else if ((int)TimeOfDay > StopTime)
+            return;
+        else
+        {
+            SunUpdate();
+            if (Math.Floor((double)TimeOfDay) >= 12)
             {
-                SunUpdate();
-                return;
+                TimeOfDay = 0;
             }
-            else if ((int)TimeOfDay > StopTime)
-            {
-                return;
-            }
-            else
-            {
-                SunUpdate();
-
-                if (Math.Floor((double)TimeOfDay) >= 12)
-                {
-                    TimeOfDay = 0;
-                }
-                TimeOfDay += (Time.deltaTime / secondsPerDay) * timeMultiplier;
-            }
-        //}
+            TimeOfDay += (Time.deltaTime / secondsPerDay) * timeMultiplier;
+        }
     }
 
     public void SunUpdate()
     {
-        Debug.Log("sun: " + sun + "TimeOfDay: " + TimeOfDay + "degr: " + degr + "numHours: " + numHours);
         sun.transform.localRotation = Quaternion.Euler((((TimeOfDay / numHours) * degr))/2 - 90, 90, 0);
         sun.transform.localPosition = new Vector3((TimeOfDay / numHours * 0.4f)-0.1f, 0.4f/2 * (float)Math.Sin((float)((TimeOfDay / numHours) * radians)), 0.1f);
         if (DrawLines)
         {
-            //Debug.Log("drawing");
             //vertical
             DrawLine(new Vector3(sun.transform.position.x, yValue, zValue), sun.transform.position);
             //cat - sun

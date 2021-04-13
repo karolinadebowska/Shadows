@@ -61,7 +61,7 @@ namespace GoogleARCore.Examples.AugmentedImage
             { _quizMode = value; }
         }
         /// <summary>
-        /// The overlay containing the fit to scan user guide.
+        /// The overlay containing the fit to scan texture
         /// </summary>
         public GameObject LoadingOverlay;
         public GameObject DuringGameDemo2;
@@ -75,14 +75,11 @@ namespace GoogleARCore.Examples.AugmentedImage
         public GameObject StartScreen;
         public GameObject AboutScreen;
         public GameObject Quiz;
-        //public GameObject mainSlider;
         public PawnManipulator manipulator;
         public SunMovement sunMovement;
-
         public CanvasGroup canvasGroupDemo1, canvasGroupDemo2;
         public AugmentedImageVisualizer visualizer = null;
-        private Dictionary<int, AugmentedImageVisualizer> _visualizers
-            = new Dictionary<int, AugmentedImageVisualizer>();
+        private Dictionary<int, AugmentedImageVisualizer> _visualizers = new Dictionary<int, AugmentedImageVisualizer>();
         public List<AugmentedImage> _tempAugmentedImages = new List<AugmentedImage>();
         [HideInInspector]
         public int counter = 0;
@@ -100,6 +97,7 @@ namespace GoogleARCore.Examples.AugmentedImage
             canvasGroup.alpha = 0f; //this makes everything transparent
             canvasGroup.blocksRaycasts = false; //this prevents the UI element to receive input events
         }
+
         void ShowUI(CanvasGroup canvasGroup)
         {
             canvasGroup.alpha = 1f;
@@ -110,6 +108,7 @@ namespace GoogleARCore.Examples.AugmentedImage
                 amPm.gameObject.SetActive(true);
             }
         }
+
         public void disableLayers() {
             StartScreen.SetActive(true);
             LoadingDemo1.SetActive(false);
@@ -125,37 +124,40 @@ namespace GoogleARCore.Examples.AugmentedImage
             HideUI(canvasGroupDemo2);
             HomeButton.SetActive(false);
         }
+
         /// <summary>
         /// The Unity Awake() method.
         /// </summary>
         public void Awake()
         {
             disableLayers();
-
             // Enable ARCore to target 60fps camera capture frame rate on supported devices.
             // Note, Application.targetFrameRate is ignored when QualitySettings.vSyncCount != 0.
             Application.targetFrameRate = 60;
         }
+
         private void switchDemos(AugmentedImage image) {
             if (Demo2 && image.Name.Equals("demo1"))
             {
                 //remove the object
                 _visualizers.Remove(image.DatabaseIndex);
                 GameObject.Destroy(visualizer.gameObject);
-                //interupt a game
+                //interupt a quiz mode
                 QuizMode = false;
             }
             else if (!Demo2 && image.Name.Equals("demo2"))
             {
                 manipulator.disableObjects();
-                //interupt a game
+                //interrupt a game mode
                 manipulator.GameMode = false;
             }
         }
+
         public void Hide()
         {
             LoadingDemo2.SetActive(false);
         }
+
         public void displayControl() {
             foreach (var visualizer in _visualizers.Values)
             {
@@ -166,9 +168,6 @@ namespace GoogleARCore.Examples.AugmentedImage
                         Demo2 = false;
                         LoadingOverlay.SetActive(false);
                         HideUI(canvasGroupDemo2);
-                        //disable landscape mode
-                       // Screen.autorotateToLandscapeRight = false;
-                        //Screen.autorotateToLandscapeLeft = false;
                         if (!clicked1)
                             LoadingDemo1.SetActive(true);
                         else if (clicked1 && !QuizMode)
@@ -189,9 +188,6 @@ namespace GoogleARCore.Examples.AugmentedImage
                             ShowUI(canvasGroupDemo2);
                         else if (clicked2 && manipulator.GameMode)
                             HideUI(canvasGroupDemo2);
-                        //disable landscape mode
-                       // Screen.autorotateToLandscapeRight = false;
-                       // Screen.autorotateToLandscapeLeft = false;
                         if (manipulator.GameMode)
                         {
                             //the first time user launches the game
@@ -210,7 +206,6 @@ namespace GoogleARCore.Examples.AugmentedImage
                     }
                     return;
                 }
-                // LoadingOverlay.SetActive(true);
             }
         }
 
@@ -274,12 +269,14 @@ namespace GoogleARCore.Examples.AugmentedImage
             clicked1 = true;
             ShowUI(canvasGroupDemo1);
         }
+
         public void onClick2()
         {
             LoadingDemo2.SetActive(false);
             clicked2 = true;
             ShowUI(canvasGroupDemo2);
         }
+
         public void wantToPlay()
         {
             QuestionDemo2.SetActive(false);
@@ -288,6 +285,7 @@ namespace GoogleARCore.Examples.AugmentedImage
             readyToPlayDemo2 = true;
             manipulator.GameWon = false;
         }
+
         public void playAgainDemo2() {
             Camera.main.cullingMask = ~(1 << 9);
             Demo2Success.SetActive(false);
@@ -296,6 +294,7 @@ namespace GoogleARCore.Examples.AugmentedImage
             clicked2 = true;
             manipulator.turnGameMode();
         }
+
         public void endGameDemo2()
         {
             Camera.main.cullingMask = -1;
@@ -343,7 +342,6 @@ namespace GoogleARCore.Examples.AugmentedImage
             HideUI(canvasGroupDemo1);
             Quiz.SetActive(true);
             int val = generateRandom(0,12);
-            //Debug.Log("random in controller " + val);
             sunMovement.randomPosition(val);
             correctVal = getTimeFromValue(val);
             HashSet<int> numbers = new HashSet<int>();
@@ -353,8 +351,6 @@ namespace GoogleARCore.Examples.AugmentedImage
                 numbers.Add(generateRandom(0,12));
             }
             List<int> hList = numbers.ToList();
-            // Console.WriteLine(String.Join(",", numbers));
-
             var shuffled = hList.OrderBy(x => Guid.NewGuid()).ToList();
             Console.WriteLine(String.Join(",", shuffled));
             SetValue(buttonValue1, shuffled[0]);
