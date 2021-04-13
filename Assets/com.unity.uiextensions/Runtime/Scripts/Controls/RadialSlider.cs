@@ -202,7 +202,7 @@ namespace UnityEngine.UI.Extensions
         {
             RectTransformUtility.ScreenPointToLocalPointInRectangle(transform as RectTransform, Input.mousePosition, m_eventCamera, out m_localPos);
             float value = (Mathf.Atan2(-m_localPos.y, m_localPos.x) * 180f / Mathf.PI + 180f) / 360f + 0.25f;
-            Debug.Log(value);
+            //Debug.Log(value);
             // radial pos of the mouse position.
             if (value >= 1)
                value = value - 1;
@@ -211,10 +211,9 @@ namespace UnityEngine.UI.Extensions
 
         public void UpdateRadialImage(float targetAngle)
         {
-            Debug.Log("angle :" + targetAngle);
-            clockHandTransform.transform.rotation = Quaternion.Euler(0, 0, (-targetAngle * 360)+180);
+            int angle = (int)Math.Round((decimal)((-targetAngle * 360) + 180) / 30) * 30;
+            clockHandTransform.transform.rotation = Quaternion.Euler(0, 0, angle);           
             RadialImage.fillAmount = targetAngle;
-
             RadialImage.color = Color.Lerp(m_startColor, m_endColor, targetAngle);
         }
 
@@ -223,18 +222,6 @@ namespace UnityEngine.UI.Extensions
             _onValueChanged.Invoke((int)(m_targetAngle * 360f));
             _onTextValueChanged.Invoke(((int)(m_targetAngle * 360f)).ToString());
         }
-
-        //#if UNITY_EDITOR
-
-        //        private void OnValidate()
-        //        {
-        //            if (LerpToTarget && LerpCurve.length < 2)
-        //            {
-        //                LerpToTarget = false;
-        //                Debug.LogError("You need to define a Lerp Curve to enable 'Lerp To Target'");
-        //            }
-        //        }
-        //#endif
 
         #region Interfaces
         // Called when the pointer enters our GUI component.
