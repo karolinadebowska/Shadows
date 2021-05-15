@@ -30,7 +30,7 @@ namespace GoogleARCore.Examples.AugmentedImage
     using System;
 
     /// <summary>
-    /// Controller for AugmentedImage example.
+    /// Controller for the application
     /// </summary>
     /// <remarks>
     /// In this sample, we assume all images are static or moving slowly with
@@ -78,10 +78,12 @@ namespace GoogleARCore.Examples.AugmentedImage
         public PawnManipulator manipulator;
         public SunMovement sunMovement;
         public CanvasGroup canvasGroupDemo1, canvasGroupDemo2;
+
         public AugmentedImageVisualizer visualizer = null;
         private Dictionary<int, AugmentedImageVisualizer> _visualizers = new Dictionary<int, AugmentedImageVisualizer>();
         public List<AugmentedImage> _tempAugmentedImages = new List<AugmentedImage>();
         [HideInInspector]
+
         public int counter = 0;
         [HideInInspector]
         public bool _demo2;
@@ -219,7 +221,6 @@ namespace GoogleARCore.Examples.AugmentedImage
             {
                 Application.Quit();
             }
-
             // Only allow the screen to sleep when not tracking.
             if (Session.Status != SessionStatus.Tracking)
             {
@@ -229,15 +230,13 @@ namespace GoogleARCore.Examples.AugmentedImage
             {
                 Screen.sleepTimeout = SleepTimeout.NeverSleep;
             }
-
             // Get updated augmented images for this frame.
             Session.GetTrackables<AugmentedImage>(_tempAugmentedImages, TrackableQueryFilter.Updated);
 
-            // Create visualizers and anchors for updated augmented images that are tracking and do
-            // not previously have a visualizer. Remove visualizers for stopped images.
-            foreach (var image in _tempAugmentedImages)
-            {
+            foreach (var image in _tempAugmentedImages){
                 _visualizers.TryGetValue(image.DatabaseIndex, out visualizer);
+                // Create visualizers and anchors for updated augmented images that are tracking and do
+                // not previously have a visualizer.
                 if (image.TrackingMethod == AugmentedImageTrackingMethod.FullTracking && visualizer == null)
                 {
                     // Create an anchor to ensure that ARCore keeps tracking this augmented image.
@@ -251,7 +250,7 @@ namespace GoogleARCore.Examples.AugmentedImage
                 {
                     switchDemos(image);
                 }
-                //destroy objects that are not being tracked
+                //destroy visualizers if the augmented image is not being tracked
                 else if (image.TrackingMethod == AugmentedImageTrackingMethod.NotTracking && visualizer != null)
                 {
                     _visualizers.Remove(image.DatabaseIndex);
@@ -337,6 +336,7 @@ namespace GoogleARCore.Examples.AugmentedImage
         public string correctVal;
         [HideInInspector]
         public void turnQuizMode() {
+            SunMovement.DrawLines = false;
             Demo1Success.SetActive(false);
             QuizMode = true;
             HideUI(canvasGroupDemo1);

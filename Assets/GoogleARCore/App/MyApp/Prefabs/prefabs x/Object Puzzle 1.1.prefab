@@ -566,7 +566,7 @@ PrefabInstance:
     - target: {fileID: 542015356796898061, guid: b005b6f0473bfa647955ffcc1ead2653,
         type: 3}
       propertyPath: m_Name
-      value: flower puzzle (1)
+      value: flower puzzle
       objectReference: {fileID: 0}
     - target: {fileID: 3059418810802186296, guid: b005b6f0473bfa647955ffcc1ead2653,
         type: 3}

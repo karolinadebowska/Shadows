@@ -85,7 +85,6 @@ namespace GoogleARCore.Examples.ObjectManipulation
             {
                 if (gesture.TargetObject == null)
                 {
-                    //Initialize();
                     //Debug.Log("can start manipulation");
                 }
                 else if (GameMode && gesture.TargetObject != null)
@@ -150,26 +149,9 @@ namespace GoogleARCore.Examples.ObjectManipulation
             manipulator0.transform.position = new Vector3(lampOriginalPosition.x + valueX, lampOriginalPosition.y, lampOriginalPosition.z + valueZ);
             controller.displayControl();
         }
-            /*      
-                    public void Initialize()
-                    {
-                        Debug.Log("awake in pawn");
-                        if (GameObject.FindGameObjectWithTag("lamp"))
-                        {
-                            lamp = (GameObject)FindObjectOfType(typeof(GameObject));
-                            Debug.Log("lamp " + lamp);
-                        }
-                       // if (GameObject.FindGameObjectWithTag("puzzle"))
-                       // {
-                           // puzzle = (GameObject)FindObjectOfType(typeof(GameObject));
-                           // Debug.Log("puzzle " + puzzle);
-                       // }
-                    }*/
-            public void Start()
+        public void Start()
         {
             FirstPersonCamera = Camera.main;
-            //Debug.Log("main camera: " + FirstPersonCamera);
-            //controller = GameObject.FindGameObjectsWithTag("GameController").GetComponent<AugmentedImageController>();
             clickCount = 0;
         }
         public void resetPositions() {
